@@ -7,4 +7,14 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  // Integration credentials
+  googleSheetsCredentials: process.env.GOOGLE_SHEETS_CREDENTIALS ?? "",
+  googleSheetsId: process.env.GOOGLE_SHEETS_ID ?? "",
+  lineChannelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN ?? "",
+  telegramBotToken: process.env.TELEGRAM_BOT_TOKEN ?? "",
+  telegramChatId: process.env.TELEGRAM_CHAT_ID ?? "",
+  smtpHost: process.env.SMTP_HOST ?? "",
+  smtpPort: parseInt(process.env.SMTP_PORT ?? "587"),
+  smtpUser: process.env.SMTP_USER ?? "",
+  smtpPassword: process.env.SMTP_PASSWORD ?? "",
 };

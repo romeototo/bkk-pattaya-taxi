@@ -39,14 +39,16 @@ describe("booking.create", () => {
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.booking.create({
+      fullName: "John Doe",
+      phone: "+66971729666",
+      email: "john@example.com",
       pickupLocation: "Suvarnabhumi Airport",
       dropoffLocation: "Hilton Pattaya",
-      date: "2025-04-15",
-      time: "14:00",
+      travelDate: "2025-04-15",
+      travelTime: "14:00",
       passengers: 2,
       luggage: 2,
-      contact: "+1234567890",
-      contactMethod: "whatsapp",
+      preferredContactMethod: "whatsapp",
       notes: "Need child seat",
     });
 
@@ -58,33 +60,57 @@ describe("booking.create", () => {
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.booking.create({
+      fullName: "Jane Smith",
+      phone: "+66987654321",
+      email: "jane@example.com",
       pickupLocation: "Bangkok City Center",
       dropoffLocation: "Pattaya Walking Street",
-      date: "2025-05-01",
-      time: "09:00",
+      travelDate: "2025-05-01",
+      travelTime: "09:00",
       passengers: 4,
       luggage: 3,
-      contact: "john@example.com",
-      contactMethod: "email",
+      preferredContactMethod: "email",
     });
 
     expect(result).toEqual({ success: true, bookingId: 1 });
   });
 
-  it("rejects booking with missing pickup location", async () => {
+  it("rejects booking with missing full name", async () => {
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
 
     await expect(
       caller.booking.create({
-        pickupLocation: "",
+        fullName: "",
+        phone: "+66971729666",
+        email: "test@example.com",
+        pickupLocation: "Bangkok",
         dropoffLocation: "Pattaya",
-        date: "2025-04-15",
-        time: "14:00",
+        travelDate: "2025-04-15",
+        travelTime: "14:00",
         passengers: 2,
         luggage: 2,
-        contact: "+1234567890",
-        contactMethod: "whatsapp",
+        preferredContactMethod: "whatsapp",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("rejects booking with invalid email", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.booking.create({
+        fullName: "John Doe",
+        phone: "+66971729666",
+        email: "invalid-email",
+        pickupLocation: "Bangkok",
+        dropoffLocation: "Pattaya",
+        travelDate: "2025-04-15",
+        travelTime: "14:00",
+        passengers: 2,
+        luggage: 2,
+        preferredContactMethod: "whatsapp",
       })
     ).rejects.toThrow();
   });
@@ -95,14 +121,16 @@ describe("booking.create", () => {
 
     await expect(
       caller.booking.create({
+        fullName: "John Doe",
+        phone: "+66971729666",
+        email: "john@example.com",
         pickupLocation: "Bangkok",
         dropoffLocation: "Pattaya",
-        date: "2025-04-15",
-        time: "14:00",
+        travelDate: "2025-04-15",
+        travelTime: "14:00",
         passengers: 0,
         luggage: 2,
-        contact: "+1234567890",
-        contactMethod: "whatsapp",
+        preferredContactMethod: "whatsapp",
       })
     ).rejects.toThrow();
   });
@@ -113,14 +141,16 @@ describe("booking.create", () => {
 
     await expect(
       caller.booking.create({
+        fullName: "John Doe",
+        phone: "+66971729666",
+        email: "john@example.com",
         pickupLocation: "Bangkok",
         dropoffLocation: "Pattaya",
-        date: "2025-04-15",
-        time: "14:00",
+        travelDate: "2025-04-15",
+        travelTime: "14:00",
         passengers: 2,
         luggage: 2,
-        contact: "+1234567890",
-        contactMethod: "telegram" as any,
+        preferredContactMethod: "invalid" as any,
       })
     ).rejects.toThrow();
   });
