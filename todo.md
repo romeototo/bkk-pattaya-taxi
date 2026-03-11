@@ -29,3 +29,4 @@
 - [x] AI Chatbot - pre-loaded knowledge about services, routes, pricing, FAQ
 - [x] Vitest tests for admin booking procedures
 - [x] Vitest tests for chatbot procedure
+- [x] Google Places Autocomplete สำหรับช่อง Pickup Location และ Drop-off Location

@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ChatWidget } from "@/components/ChatWidget";
+import { PlacesAutocomplete } from "@/components/PlacesAutocomplete";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -642,29 +643,23 @@ export default function Home() {
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup}</label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          placeholder="e.g., Suvarnabhumi Airport"
-                          value={formData.pickupLocation}
-                          onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value })}
-                          className="pl-10 bg-input border-border"
-                          required
-                        />
-                      </div>
+                      <PlacesAutocomplete
+                        value={formData.pickupLocation}
+                        onChange={(val) => setFormData({ ...formData, pickupLocation: val })}
+                        placeholder="e.g., Suvarnabhumi Airport"
+                        className="bg-input border-border"
+                        required
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff}</label>
-                      <div className="relative">
-                        <Navigation className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          placeholder="e.g., Hilton Pattaya"
-                          value={formData.dropoffLocation}
-                          onChange={(e) => setFormData({ ...formData, dropoffLocation: e.target.value })}
-                          className="pl-10 bg-input border-border"
-                          required
-                        />
-                      </div>
+                      <PlacesAutocomplete
+                        value={formData.dropoffLocation}
+                        onChange={(val) => setFormData({ ...formData, dropoffLocation: val })}
+                        placeholder="e.g., Hilton Pattaya"
+                        className="bg-input border-border"
+                        required
+                      />
                     </div>
                   </div>
 
