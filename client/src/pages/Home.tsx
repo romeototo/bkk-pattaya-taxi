@@ -47,10 +47,10 @@ const translations = {
       title: "Popular Routes",
       subtitle: "Choose your route and enjoy a comfortable private transfer",
       routes: [
-        { name: "Bangkok → Pattaya", price: "From ฿1,200", desc: "Door-to-door private transfer from any location in Bangkok to your hotel in Pattaya. Approximately 1.5-2 hours.", icon: "car" },
-        { name: "Pattaya → Bangkok", price: "From ฿1,200", desc: "Return transfer from Pattaya to Bangkok city center, hotel, or any location. Comfortable and reliable.", icon: "car" },
-        { name: "Suvarnabhumi Airport → Pattaya", price: "From ฿1,100", desc: "Meet & greet at arrival hall. Your driver will hold a name sign and assist with luggage.", icon: "plane" },
-        { name: "Don Mueang Airport → Pattaya", price: "From ฿1,300", desc: "Pickup from Don Mueang International Airport with flight monitoring and free waiting time.", icon: "plane" },
+        { name: "Bangkok → Pattaya", price: "From ฿1,500", desc: "Door-to-door private transfer from any location in Bangkok to your hotel in Pattaya. Approximately 1.5-2 hours.", icon: "car" },
+        { name: "Pattaya → Bangkok", price: "From ฿1,500", desc: "Return transfer from Pattaya to Bangkok city center, hotel, or any location. Comfortable and reliable.", icon: "car" },
+        { name: "Suvarnabhumi Airport → Pattaya", price: "From ฿1,500", desc: "Meet & greet at arrival hall. Your driver will hold a name sign and assist with luggage.", icon: "plane" },
+        { name: "Don Mueang Airport → Pattaya", price: "From ฿1,500", desc: "Pickup from Don Mueang International Airport with flight monitoring and free waiting time.", icon: "plane" },
       ],
     },
     whyUs: {
