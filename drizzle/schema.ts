@@ -33,3 +33,25 @@ export const bookings = mysqlTable("bookings", {
 
 export type Booking = typeof bookings.$inferSelect;
 export type InsertBooking = typeof bookings.$inferInsert;
+
+export const notificationSettings = mysqlTable("notificationSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  // Admin notification channels
+  adminLineToken: varchar("adminLineToken", { length: 500 }),
+  adminEmailEnabled: mysqlEnum("adminEmailEnabled", ["true", "false"]).default("true").notNull(),
+  adminTelegramChatId: varchar("adminTelegramChatId", { length: 100 }),
+  // User notification preferences
+  userEmailNotifications: mysqlEnum("userEmailNotifications", ["true", "false"]).default("true").notNull(),
+  notifyOnConfirmed: mysqlEnum("notifyOnConfirmed", ["true", "false"]).default("true").notNull(),
+  notifyOnCompleted: mysqlEnum("notifyOnCompleted", ["true", "false"]).default("true").notNull(),
+  notifyOnCancelled: mysqlEnum("notifyOnCancelled", ["true", "false"]).default("true").notNull(),
+  // Scheduled notifications
+  enableScheduledNotifications: mysqlEnum("enableScheduledNotifications", ["true", "false"]).default("true").notNull(),
+  scheduledNotificationMinutesBefore: int("scheduledNotificationMinutesBefore").default(60).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationSettings = typeof notificationSettings.$inferSelect;
+export type InsertNotificationSettings = typeof notificationSettings.$inferInsert;

@@ -1,6 +1,6 @@
 import { eq, desc, sql, like, or, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, bookings, InsertBooking } from "../drizzle/schema";
+import { InsertUser, users, bookings, InsertBooking, notificationSettings, InsertNotificationSettings } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -168,4 +168,52 @@ export async function searchBookings(query: string, statusFilter?: string) {
   return db.select().from(bookings)
     .where(conditions.length === 1 ? conditions[0] : and(...conditions))
     .orderBy(desc(bookings.createdAt));
+}
+
+// Notification settings helpers
+export async function getNotificationSettings(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(notificationSettings).where(eq(notificationSettings.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function upsertNotificationSettings(userId: number, settings: Partial<InsertNotificationSettings>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getNotificationSettings(userId);
+  if (existing) {
+    await db.update(notificationSettings).set(settings).where(eq(notificationSettings.userId, userId));
+  } else {
+    await db.insert(notificationSettings).values({ userId, ...settings });
+  }
+  return getNotificationSettings(userId);
+}
+
+export async function updateAdminNotificationChannels(userId: number, channels: { lineToken?: string; emailEnabled?: boolean; telegramChatId?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const updateData: Record<string, any> = {};
+  if (channels.lineToken !== undefined) updateData.adminLineToken = channels.lineToken;
+  if (channels.emailEnabled !== undefined) updateData.adminEmailEnabled = channels.emailEnabled ? "true" : "false";
+  if (channels.telegramChatId !== undefined) updateData.adminTelegramChatId = channels.telegramChatId;
+  
+  return upsertNotificationSettings(userId, updateData);
+}
+
+export async function updateUserNotificationPreferences(userId: number, prefs: { emailNotifications?: boolean; notifyOnConfirmed?: boolean; notifyOnCompleted?: boolean; notifyOnCancelled?: boolean; enableScheduledNotifications?: boolean; scheduledMinutesBefore?: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const updateData: Record<string, any> = {};
+  if (prefs.emailNotifications !== undefined) updateData.userEmailNotifications = prefs.emailNotifications ? "true" : "false";
+  if (prefs.notifyOnConfirmed !== undefined) updateData.notifyOnConfirmed = prefs.notifyOnConfirmed ? "true" : "false";
+  if (prefs.notifyOnCompleted !== undefined) updateData.notifyOnCompleted = prefs.notifyOnCompleted ? "true" : "false";
+  if (prefs.notifyOnCancelled !== undefined) updateData.notifyOnCancelled = prefs.notifyOnCancelled ? "true" : "false";
+  if (prefs.enableScheduledNotifications !== undefined) updateData.enableScheduledNotifications = prefs.enableScheduledNotifications ? "true" : "false";
+  if (prefs.scheduledMinutesBefore !== undefined) updateData.scheduledNotificationMinutesBefore = prefs.scheduledMinutesBefore;
+  
+  return upsertNotificationSettings(userId, updateData);
 }

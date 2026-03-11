@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, adminProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings } from "./db";
+import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { invokeLLM } from "./_core/llm";
 
@@ -130,6 +130,40 @@ export const appRouter = router({
         return getBookingStats();
       }),
     }),
+  }),
+
+  // Notification Settings
+  notifications: router({
+    getSettings: publicProcedure.query(async ({ ctx }) => {
+      if (!ctx.user) return null;
+      return getNotificationSettings(ctx.user.id);
+    }),
+
+    updateAdminChannels: adminProcedure
+      .input(z.object({
+        lineToken: z.string().optional(),
+        emailEnabled: z.boolean().optional(),
+        telegramChatId: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const updated = await updateAdminNotificationChannels(ctx.user.id, input);
+        return { success: true, settings: updated };
+      }),
+
+    updateUserPreferences: publicProcedure
+      .input(z.object({
+        emailNotifications: z.boolean().optional(),
+        notifyOnConfirmed: z.boolean().optional(),
+        notifyOnCompleted: z.boolean().optional(),
+        notifyOnCancelled: z.boolean().optional(),
+        enableScheduledNotifications: z.boolean().optional(),
+        scheduledMinutesBefore: z.number().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (!ctx.user) throw new Error("User not authenticated");
+        const updated = await updateUserNotificationPreferences(ctx.user.id, input);
+        return { success: true, settings: updated };
+      }),
   }),
 
   // AI Chatbot

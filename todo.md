@@ -32,3 +32,13 @@
 - [x] Google Places Autocomplete สำหรับช่อง Pickup Location และ Drop-off Location
 - [x] เปลี่ยนรูปรถ Hero Section จาก Toyota Camry เป็น Honda City ปี 2012 สีขาว
 - [x] เปลี่ยนรูป Gallery ทั้งหมดเป็น Citi CNG ปี 2012 (4 ภาพ: airport, pattaya, interior, bangkok)
+- [x] Admin Notification Settings (LINE, Email, Telegram)
+- [x] In-app Toast Notifications for Booking Status
+- [x] User Notification Preferences UI
+- [ ] Scheduled Notifications (1 hour before booking)
+- [x] Notification Settings Database Table
+- [x] tRPC Procedures for Notification Management
+- [ ] LINE Webhook Integration
+- [ ] Email Notification Service
+- [ ] Telegram Bot Integration
+- [x] Vitest for Notification System
