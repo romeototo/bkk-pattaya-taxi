@@ -42,3 +42,4 @@
 - [ ] Email Notification Service
 - [ ] Telegram Bot Integration
 - [x] Vitest for Notification System
+- [x] อัปเดต Contact Section ให้มี QR Code, WhatsApp, LINE, Call Us Cards
