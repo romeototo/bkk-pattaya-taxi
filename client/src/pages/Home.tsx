@@ -1002,7 +1002,7 @@ export default function Home() {
                   </h3>
                   <div className="bg-white rounded-xl p-4 mb-6 flex items-center justify-center">
                     <img
-                      src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/whatsapp-qr-dusit_5838f2e1.jpg"
+                      src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/whatsapp-qr-new_96d685ae.jpg"
                       alt="WhatsApp QR Code"
                       className="w-full max-w-xs"
                     />

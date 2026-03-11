@@ -47,6 +47,7 @@
 - [x] Add WhatsApp QR Code to contact section
 - [x] Upload QR Code to CDN
 - [x] Display QR Code in contact section
+- [x] Update WhatsApp QR Code with new version
 
 ## Phase 7: Deployment & Polish
 - [x] Final testing in production environment
@@ -173,3 +174,17 @@
 
 Last Updated: March 12, 2026
 Status: PRODUCTION READY ✅
+
+
+## Phase 8: Custom Notification System
+- [x] Add notification type enums (new_booking, confirmation, reminder, status_change)
+- [x] Build enhanced notification service with 4 notification types
+- [x] Create comprehensive test suite for notification service (15 tests)
+- [x] Support Email and Telegram channels
+- [ ] Create notification preferences UI for customers
+- [ ] Add notification history view in admin dashboard
+- [ ] Implement scheduled reminder notifications (1-2 days before travel)
+- [ ] Create notification_logs table for tracking all notifications
+- [ ] Add notification retry logic for failed sends
+- [ ] Document notification system setup
+
