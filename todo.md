@@ -17,3 +17,15 @@
 - [x] Database schema for bookings
 - [x] Server-side booking API with owner notification
 - [x] Vitest tests for booking functionality
+- [x] Admin Dashboard - protected route with role-based access
+- [x] Admin Dashboard - booking list with search, filter by status
+- [x] Admin Dashboard - update booking status (pending/confirmed/completed/cancelled)
+- [x] Admin Dashboard - booking detail view with all info
+- [x] Admin Dashboard - stats overview (total bookings, pending, confirmed, today's bookings)
+- [x] Admin Dashboard - sidebar navigation with DashboardLayout
+- [x] AI Chatbot - server-side LLM procedure for answering tourist questions
+- [x] AI Chatbot - chat UI component with message history
+- [x] AI Chatbot - floating chat widget on landing page (alongside WhatsApp button)
+- [x] AI Chatbot - pre-loaded knowledge about services, routes, pricing, FAQ
+- [x] Vitest tests for admin booking procedures
+- [x] Vitest tests for chatbot procedure

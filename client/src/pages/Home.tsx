@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { ChatWidget } from "@/components/ChatWidget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -1026,15 +1027,18 @@ export default function Home() {
         </div>
       </footer>
 
+      {/* AI Chat Widget */}
+      <ChatWidget lang={lang} />
+
       {/* Floating WhatsApp Button */}
       <a
         href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/25 transition-all hover:scale-110"
+        className="fixed bottom-24 right-6 z-50 w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/25 transition-all hover:scale-110"
         aria-label="Chat on WhatsApp"
       >
-        <MessageCircle className="w-7 h-7 text-white" />
+        <MessageCircle className="w-6 h-6 text-white" />
       </a>
     </div>
   );

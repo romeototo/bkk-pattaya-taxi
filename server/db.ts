@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql, like, or, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, bookings, InsertBooking } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -113,4 +113,59 @@ export async function getBookingById(id: number) {
   }
   const result = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
+}
+
+// Admin booking helpers
+export async function updateBookingStatus(id: number, status: "pending" | "confirmed" | "completed" | "cancelled") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(bookings).set({ status }).where(eq(bookings.id, id));
+  return getBookingById(id);
+}
+
+export async function getBookingStats() {
+  const db = await getDb();
+  if (!db) return { total: 0, pending: 0, confirmed: 0, completed: 0, cancelled: 0, today: 0 };
+
+  const allBookings = await db.select().from(bookings);
+  const today = new Date().toISOString().split("T")[0];
+
+  return {
+    total: allBookings.length,
+    pending: allBookings.filter(b => b.status === "pending").length,
+    confirmed: allBookings.filter(b => b.status === "confirmed").length,
+    completed: allBookings.filter(b => b.status === "completed").length,
+    cancelled: allBookings.filter(b => b.status === "cancelled").length,
+    today: allBookings.filter(b => b.date === today).length,
+  };
+}
+
+export async function searchBookings(query: string, statusFilter?: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [];
+
+  if (query && query.trim()) {
+    const searchTerm = `%${query.trim()}%`;
+    conditions.push(
+      or(
+        like(bookings.pickupLocation, searchTerm),
+        like(bookings.dropoffLocation, searchTerm),
+        like(bookings.contact, searchTerm),
+      )
+    );
+  }
+
+  if (statusFilter && statusFilter !== "all") {
+    conditions.push(eq(bookings.status, statusFilter as "pending" | "confirmed" | "completed" | "cancelled"));
+  }
+
+  if (conditions.length === 0) {
+    return db.select().from(bookings).orderBy(desc(bookings.createdAt));
+  }
+
+  return db.select().from(bookings)
+    .where(conditions.length === 1 ? conditions[0] : and(...conditions))
+    .orderBy(desc(bookings.createdAt));
 }
