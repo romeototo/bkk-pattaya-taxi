@@ -19,10 +19,10 @@ import {
 // CDN Image URLs
 const IMAGES = {
   hero: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/honda-city-2012-white-35WWrBNiUGHkRQuVZe7AWd.webp",
-  airport: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-cng-2012-airport-FfwEU3GPyuUJbvMidQhwJk.webp",
-  pattaya: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-cng-2012-pattaya-b5MVWipXSbYcbLBUpC7WpS.webp",
-  interior: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-cng-2012-interior-aKwo6zC68F9ofjuT73RZh6.webp",
-  bangkok: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-cng-2012-bangkok-57sYAERisCnzDfv4P5qFEe.webp",
+  airport: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-2012-white-exterior-side-AT3LpncDoVAtnbUSRKuzaR.webp",
+  pattaya: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-2012-white-scenic-view-UfwzRWwfDcLP6jMG7y5ahg.webp",
+  interior: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-2012-white-interior-seats-UtCHYQyJqrsrawojhP5T7a.webp",
+  bangkok: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/citi-2012-white-front-view-kmz53xVgoyPF8w6GoHNcWe.webp",
   logo: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/logo-JdAMoyATex4yrTTU4EPBor.png",
 };
 
