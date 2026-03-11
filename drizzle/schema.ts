@@ -17,16 +17,19 @@ export type InsertUser = typeof users.$inferInsert;
 
 export const bookings = mysqlTable("bookings", {
   id: int("id").autoincrement().primaryKey(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
   pickupLocation: varchar("pickupLocation", { length: 500 }).notNull(),
   dropoffLocation: varchar("dropoffLocation", { length: 500 }).notNull(),
-  date: varchar("date", { length: 20 }).notNull(),
-  time: varchar("time", { length: 10 }).notNull(),
+  travelDate: varchar("travelDate", { length: 20 }).notNull(),
+  travelTime: varchar("travelTime", { length: 10 }).notNull(),
   passengers: int("passengers").notNull(),
   luggage: int("luggage").notNull(),
-  contact: varchar("contact", { length: 320 }).notNull(),
-  contactMethod: mysqlEnum("contactMethod", ["whatsapp", "email", "phone"]).default("whatsapp").notNull(),
+  preferredContactMethod: mysqlEnum("preferredContactMethod", ["whatsapp", "email", "phone", "line", "telegram"]).default("whatsapp").notNull(),
   notes: text("notes"),
   status: mysqlEnum("status", ["pending", "confirmed", "completed", "cancelled"]).default("pending").notNull(),
+  notificationsSent: text("notificationsSent"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

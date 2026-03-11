@@ -1,45 +1,44 @@
-# Project TODO - BKK Pattaya Private Taxi
+# BKK Pattaya Taxi - Production-Ready Booking System TODO
 
-- [x] Dark theme with sky blue accent color - elegant premium style
-- [x] Hero section with luxury taxi imagery and clear CTA (Book Now, WhatsApp)
-- [x] Popular Routes / Services section (Bangkok-Pattaya, Airport Transfer, Day Tours) with transparent pricing
-- [x] Why Choose Us section highlighting USP (Fixed Price, Professional Drivers, 24/7 Service)
-- [x] Customer testimonials/reviews from international travelers
-- [x] Booking inquiry form connected to WhatsApp/LINE
-- [x] Gallery section showing vehicles and destinations
-- [x] FAQ section with common questions
-- [x] Contact section with WhatsApp, LINE, Phone buttons and LINE QR code
-- [x] Floating WhatsApp button on mobile
-- [x] SEO optimization with meta tags and structured data (LocalBusiness, TaxiService schema)
-- [x] Mobile-responsive design
-- [x] Multi-language support (English primary, Thai secondary)
-- [x] Google Map embed showing Bangkok to Pattaya route
-- [x] Database schema for bookings
-- [x] Server-side booking API with owner notification
-- [x] Vitest tests for booking functionality
-- [x] Admin Dashboard - protected route with role-based access
-- [x] Admin Dashboard - booking list with search, filter by status
-- [x] Admin Dashboard - update booking status (pending/confirmed/completed/cancelled)
-- [x] Admin Dashboard - booking detail view with all info
-- [x] Admin Dashboard - stats overview (total bookings, pending, confirmed, today's bookings)
-- [x] Admin Dashboard - sidebar navigation with DashboardLayout
-- [x] AI Chatbot - server-side LLM procedure for answering tourist questions
-- [x] AI Chatbot - chat UI component with message history
-- [x] AI Chatbot - floating chat widget on landing page (alongside WhatsApp button)
-- [x] AI Chatbot - pre-loaded knowledge about services, routes, pricing, FAQ
-- [x] Vitest tests for admin booking procedures
-- [x] Vitest tests for chatbot procedure
-- [x] Google Places Autocomplete สำหรับช่อง Pickup Location และ Drop-off Location
-- [x] เปลี่ยนรูปรถ Hero Section จาก Toyota Camry เป็น Honda City ปี 2012 สีขาว
-- [x] เปลี่ยนรูป Gallery ทั้งหมดเป็น Citi CNG ปี 2012 (4 ภาพ: airport, pattaya, interior, bangkok)
-- [x] Admin Notification Settings (LINE, Email, Telegram)
-- [x] In-app Toast Notifications for Booking Status
-- [x] User Notification Preferences UI
-- [ ] Scheduled Notifications (1 hour before booking)
-- [x] Notification Settings Database Table
-- [x] tRPC Procedures for Notification Management
-- [ ] LINE Webhook Integration
-- [ ] Email Notification Service
-- [ ] Telegram Bot Integration
-- [x] Vitest for Notification System
-- [x] อัปเดต Contact Section ให้มี QR Code, WhatsApp, LINE, Call Us Cards
+## Phase 1: Database & Environment Setup
+- [ ] Extend bookings table with all required fields (full name, phone, email, pickup, dropoff, travel date/time, passengers, luggage, contact method, notes)
+- [ ] Add booking_notifications table for tracking sent notifications
+- [ ] Create .env.example with all required credentials
+- [ ] Add environment variables for Google Sheets, LINE, Telegram, Email
+
+## Phase 2: Integration Services
+- [ ] Google Sheets API integration (append booking data)
+- [ ] LINE Bot integration (send booking confirmation)
+- [ ] Telegram Bot integration (send booking notification)
+- [ ] Email service integration (send confirmation email)
+- [ ] Create notification service layer
+
+## Phase 3: Booking Form & API
+- [ ] Update booking form with all required fields
+- [ ] Create tRPC procedure for creating bookings
+- [ ] Add booking validation and error handling
+- [ ] Integrate with notification services
+- [ ] Add real-time status updates
+
+## Phase 4: Admin Dashboard
+- [ ] Create admin bookings table view
+- [ ] Add search functionality
+- [ ] Add filter by status (pending, confirmed, completed, cancelled)
+- [ ] Add status update functionality
+- [ ] Add export to CSV feature
+- [ ] Add booking detail view/modal
+- [ ] Add date range filter
+
+## Phase 5: Testing & Documentation
+- [ ] Write Vitest tests for booking API
+- [ ] Write Vitest tests for notification services
+- [ ] Create .env.example file
+- [ ] Create SETUP.md documentation
+- [ ] Create API documentation
+- [ ] Test all integrations end-to-end
+
+## Phase 6: Deployment & Polish
+- [ ] Final testing in production environment
+- [ ] Performance optimization
+- [ ] Error handling and logging
+- [ ] Delivery to user

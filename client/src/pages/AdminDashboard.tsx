@@ -83,16 +83,19 @@ function StatsCards() {
 
 type BookingType = {
   id: number;
+  fullName: string;
+  phone: string;
+  email: string;
   pickupLocation: string;
   dropoffLocation: string;
-  date: string;
-  time: string;
+  travelDate: string;
+  travelTime: string;
   passengers: number;
   luggage: number;
-  contact: string;
-  contactMethod: string;
+  preferredContactMethod: string;
   notes: string | null;
   status: string;
+  notificationsSent: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -152,14 +155,14 @@ function BookingDetailDialog({ booking }: { booking: BookingType }) {
             <CalendarDays className="w-4 h-4 text-muted-foreground" />
             <div>
               <p className="text-xs text-muted-foreground">Date</p>
-              <p className="text-sm font-medium">{booking.date}</p>
+              <p className="text-sm font-medium">{booking.travelDate}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-muted-foreground" />
             <div>
               <p className="text-xs text-muted-foreground">Time</p>
-              <p className="text-sm font-medium">{booking.time}</p>
+              <p className="text-sm font-medium">{booking.travelTime}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -181,10 +184,10 @@ function BookingDetailDialog({ booking }: { booking: BookingType }) {
         <Separator />
 
         <div className="flex items-center gap-3">
-          {contactIcons[booking.contactMethod]}
+          {contactIcons[booking.preferredContactMethod]}
           <div>
-            <p className="text-xs text-muted-foreground capitalize">{booking.contactMethod}</p>
-            <p className="text-sm font-medium">{booking.contact}</p>
+            <p className="text-xs text-muted-foreground capitalize">{booking.preferredContactMethod}</p>
+            <p className="text-sm font-medium">{booking.phone} • {booking.email}</p>
           </div>
         </div>
 
@@ -296,7 +299,7 @@ function BookingsList() {
                           <span className="ml-1 capitalize">{booking.status}</span>
                         </Badge>
                         <span className="text-xs text-muted-foreground">
-                          {booking.date} at {booking.time}
+                          {booking.travelDate} at {booking.travelTime}
                         </span>
                       </div>
                       <p className="text-sm font-medium truncate">
@@ -306,8 +309,8 @@ function BookingsList() {
                       </p>
                       <div className="flex items-center gap-4 mt-1.5 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          {contactIcons[booking.contactMethod]}
-                          {booking.contact}
+                          {contactIcons[booking.preferredContactMethod]}
+                          {booking.fullName} • {booking.phone}
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-3 h-3" /> {booking.passengers}

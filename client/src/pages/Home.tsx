@@ -250,14 +250,16 @@ export default function Home() {
 
   // Booking form state
   const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
     pickupLocation: "",
     dropoffLocation: "",
-    date: "",
-    time: "",
+    travelDate: "",
+    travelTime: "",
     passengers: "2",
     luggage: "2",
-    contact: "",
-    contactMethod: "whatsapp",
+    preferredContactMethod: "whatsapp",
     notes: "",
   });
 
@@ -267,10 +269,12 @@ export default function Home() {
       // Open WhatsApp with booking details
       const msg = encodeURIComponent(
         `Hello! I'd like to book a transfer:\n\n` +
+        `👤 Name: ${formData.fullName}\n` +
+        `📞 Phone: ${formData.phone}\n` +
         `📍 From: ${formData.pickupLocation}\n` +
         `📍 To: ${formData.dropoffLocation}\n` +
-        `📅 Date: ${formData.date}\n` +
-        `🕐 Time: ${formData.time}\n` +
+        `📅 Date: ${formData.travelDate}\n` +
+        `🕐 Time: ${formData.travelTime}\n` +
         `👥 Passengers: ${formData.passengers}\n` +
         `🧳 Luggage: ${formData.luggage}\n` +
         `${formData.notes ? `📝 Notes: ${formData.notes}` : ""}`
@@ -289,7 +293,7 @@ export default function Home() {
       ...formData,
       passengers: parseInt(formData.passengers),
       luggage: parseInt(formData.luggage),
-      contactMethod: formData.contactMethod as "whatsapp" | "email" | "phone",
+      preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
     });
   };
 
@@ -668,8 +672,8 @@ export default function Home() {
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.date}</label>
                       <Input
                         type="date"
-                        value={formData.date}
-                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        value={formData.travelDate}
+                        onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })}
                         className="bg-input border-border"
                         required
                       />
@@ -678,8 +682,8 @@ export default function Home() {
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.time}</label>
                       <Input
                         type="time"
-                        value={formData.time}
-                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                        value={formData.travelTime}
+                        onChange={(e) => setFormData({ ...formData, travelTime: e.target.value })}
                         className="bg-input border-border"
                         required
                       />
@@ -717,18 +721,42 @@ export default function Home() {
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.contact}</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Full Name</label>
                       <Input
-                        placeholder="e.g., +1234567890"
-                        value={formData.contact}
-                        onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                        placeholder="Your full name"
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         className="bg-input border-border"
                         required
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.contactMethod}</label>
-                      <Select value={formData.contactMethod} onValueChange={(v) => setFormData({ ...formData, contactMethod: v })}>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Phone / WhatsApp</label>
+                      <Input
+                        placeholder="+66 97 172 9666"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="bg-input border-border"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Email</label>
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="bg-input border-border"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Preferred Contact Method</label>
+                      <Select value={formData.preferredContactMethod} onValueChange={(v) => setFormData({ ...formData, preferredContactMethod: v })}>
                         <SelectTrigger className="bg-input border-border">
                           <SelectValue />
                         </SelectTrigger>
@@ -736,6 +764,8 @@ export default function Home() {
                           <SelectItem value="whatsapp">WhatsApp</SelectItem>
                           <SelectItem value="email">Email</SelectItem>
                           <SelectItem value="phone">Phone</SelectItem>
+                          <SelectItem value="line">LINE</SelectItem>
+                          <SelectItem value="telegram">Telegram</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

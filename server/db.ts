@@ -136,7 +136,7 @@ export async function getBookingStats() {
     confirmed: allBookings.filter(b => b.status === "confirmed").length,
     completed: allBookings.filter(b => b.status === "completed").length,
     cancelled: allBookings.filter(b => b.status === "cancelled").length,
-    today: allBookings.filter(b => b.date === today).length,
+    today: allBookings.filter(b => b.travelDate === today).length,
   };
 }
 
@@ -152,7 +152,9 @@ export async function searchBookings(query: string, statusFilter?: string) {
       or(
         like(bookings.pickupLocation, searchTerm),
         like(bookings.dropoffLocation, searchTerm),
-        like(bookings.contact, searchTerm),
+        like(bookings.fullName, searchTerm),
+        like(bookings.phone, searchTerm),
+        like(bookings.email, searchTerm),
       )
     );
   }

@@ -55,33 +55,37 @@ export const appRouter = router({
   booking: router({
     create: publicProcedure
       .input(z.object({
+        fullName: z.string().min(1, "Full name is required"),
+        phone: z.string().min(1, "Phone is required"),
+        email: z.string().email("Valid email is required"),
         pickupLocation: z.string().min(1, "Pickup location is required"),
         dropoffLocation: z.string().min(1, "Drop-off location is required"),
-        date: z.string().min(1, "Date is required"),
-        time: z.string().min(1, "Time is required"),
+        travelDate: z.string().min(1, "Travel date is required"),
+        travelTime: z.string().min(1, "Travel time is required"),
         passengers: z.number().min(1).max(15),
         luggage: z.number().min(0).max(20),
-        contact: z.string().min(1, "Contact information is required"),
-        contactMethod: z.enum(["whatsapp", "email", "phone"]).default("whatsapp"),
+        preferredContactMethod: z.enum(["whatsapp", "email", "phone", "line", "telegram"]).default("whatsapp"),
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const booking = await createBooking({
+          fullName: input.fullName,
+          phone: input.phone,
+          email: input.email,
           pickupLocation: input.pickupLocation,
           dropoffLocation: input.dropoffLocation,
-          date: input.date,
-          time: input.time,
+          travelDate: input.travelDate,
+          travelTime: input.travelTime,
           passengers: input.passengers,
           luggage: input.luggage,
-          contact: input.contact,
-          contactMethod: input.contactMethod,
+          preferredContactMethod: input.preferredContactMethod,
           notes: input.notes ?? null,
         });
 
         try {
           await notifyOwner({
             title: "New Booking Inquiry",
-            content: `New booking from ${input.contact} (${input.contactMethod})\n\nRoute: ${input.pickupLocation} → ${input.dropoffLocation}\nDate: ${input.date} at ${input.time}\nPassengers: ${input.passengers}, Luggage: ${input.luggage}\n${input.notes ? `Notes: ${input.notes}` : ""}`,
+            content: `New booking from ${input.fullName} (${input.phone})\n\nRoute: ${input.pickupLocation} → ${input.dropoffLocation}\nDate: ${input.travelDate} at ${input.travelTime}\nPassengers: ${input.passengers}, Luggage: ${input.luggage}\nPreferred Contact: ${input.preferredContactMethod}\n${input.notes ? `Notes: ${input.notes}` : ""}`,
           });
         } catch (e) {
           console.error("Failed to notify owner:", e);
