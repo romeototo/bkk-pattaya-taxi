@@ -1,0 +1,64 @@
+{
+  "query": "SELECT DATABASE(); SHOW CREATE TABLE bookings;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user wxU1YTsgnHzSjKE.root --database 7JGRSFRRiiGdqokZA4QqP6 --execute SELECT DATABASE(); SHOW CREATE TABLE bookings;",
+  "rows": [
+    {
+      "DATABASE()": "7JGRSFRRiiGdqokZA4QqP6"
+    },
+    {
+      "DATABASE()": "Table\tCreate Table"
+    },
+    {
+      "DATABASE()": "bookings\tCREATE TABLE `bookings` ("
+    },
+    {
+      "DATABASE()": "  `id` int NOT NULL AUTO_INCREMENT,"
+    },
+    {
+      "DATABASE()": "  `pickupLocation` varchar(500) NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `dropoffLocation` varchar(500) NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `date` varchar(20) NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `time` varchar(10) NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `passengers` int NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `luggage` int NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `contact` varchar(320) NOT NULL,"
+    },
+    {
+      "DATABASE()": "  `contactMethod` enum('whatsapp','email','phone') NOT NULL DEFAULT 'whatsapp',"
+    },
+    {
+      "DATABASE()": "  `notes` text DEFAULT NULL,"
+    },
+    {
+      "DATABASE()": "  `status` enum('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',"
+    },
+    {
+      "DATABASE()": "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+    },
+    {
+      "DATABASE()": "  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+    },
+    {
+      "DATABASE()": "  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */"
+    },
+    {
+      "DATABASE()": ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001"
+    }
+  ],
+  "messages": [],
+  "stdout": "DATABASE()\n7JGRSFRRiiGdqokZA4QqP6\nTable\tCreate Table\nbookings\tCREATE TABLE `bookings` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `pickupLocation` varchar(500) NOT NULL,\n  `dropoffLocation` varchar(500) NOT NULL,\n  `date` varchar(20) NOT NULL,\n  `time` varchar(10) NOT NULL,\n  `passengers` int NOT NULL,\n  `luggage` int NOT NULL,\n  `contact` varchar(320) NOT NULL,\n  `contactMethod` enum('whatsapp','email','phone') NOT NULL DEFAULT 'whatsapp',\n  `notes` text DEFAULT NULL,\n  `status` enum('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001\n",
+  "stderr": "",
+  "execution_time_ms": 1738
+}

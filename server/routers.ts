@@ -26,7 +26,7 @@ KEY INFORMATION:
 - Meet & greet at arrival hall with name sign
 - Trip duration: Bangkok to Pattaya ~1.5-2 hours depending on traffic
 - Luggage: Sedans fit 2-3 large suitcases, vans fit up to 8
-- Booking: Via WhatsApp (+66 97 172 9666), LINE (@suriwandusit), or the booking form on our website
+- Booking: Via WhatsApp (+66 82 982 4986), LINE (@suriwandusit), or the booking form on our website
 - Payment: Cash (THB) or bank transfer accepted
 - Child seats available upon request (free)
 - Day tours available: Coral Island, Nong Nooch Garden, Floating Market

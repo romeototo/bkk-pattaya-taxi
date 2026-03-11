@@ -26,9 +26,9 @@ const IMAGES = {
   logo: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/logo-JdAMoyATex4yrTTU4EPBor.png",
 };
 
-const WHATSAPP_URL = "https://wa.me/66971729666";
+const WHATSAPP_URL = "https://wa.me/66829824986";
 const LINE_URL = "https://line.me/ti/p/~suriwandusit";
-const PHONE = "+66 97 172 9666";
+const PHONE = "+66 82 982 4986";
 
 // i18n translations
 const translations = {
@@ -733,7 +733,7 @@ export default function Home() {
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">Phone / WhatsApp</label>
                       <Input
-                        placeholder="+66 97 172 9666"
+                        placeholder="+66 82 982 4986"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="bg-input border-border"
@@ -993,8 +993,26 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Right Column - QR Code */}
-              <motion.div variants={fadeInUp} className="flex flex-col items-center justify-center">
+              {/* Right Column - QR Codes */}
+              <motion.div variants={fadeInUp} className="flex flex-col items-center justify-center space-y-6">
+                {/* WhatsApp QR Code */}
+                <div className="glass-card rounded-2xl p-8 w-full max-w-sm">
+                  <h3 className="text-center text-xl font-serif font-semibold mb-6 text-foreground">
+                    Scan to Chat WhatsApp
+                  </h3>
+                  <div className="bg-white rounded-xl p-4 mb-6 flex items-center justify-center">
+                    <img
+                      src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029898140/7JGRSFRRiiGdqokZA4QqP6/whatsapp-qr-dusit_5838f2e1.jpg"
+                      alt="WhatsApp QR Code"
+                      className="w-full max-w-xs"
+                    />
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Dusit Suriwan</span>
+                  </p>
+                </div>
+
+                {/* LINE QR Code */}
                 <div className="glass-card rounded-2xl p-8 w-full max-w-sm">
                   <h3 className="text-center text-xl font-serif font-semibold mb-6 text-foreground">
                     Scan to Add LINE

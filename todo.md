@@ -37,7 +37,18 @@
 - [x] Create NOTIFICATION_ARCHITECTURE.md documentation
 - [x] Test all integrations end-to-end (26 tests passing)
 
-## Phase 6: Deployment & Polish
+## Phase 6: Phone Number & Database Updates
+- [x] Update WhatsApp URL to 082-982-4986
+- [x] Update phone number throughout website
+- [x] Fix database migration issues
+- [x] Drop and recreate bookings table with correct schema
+- [x] Test booking API with new phone number
+- [x] Verify Telegram notifications working
+- [x] Add WhatsApp QR Code to contact section
+- [x] Upload QR Code to CDN
+- [x] Display QR Code in contact section
+
+## Phase 7: Deployment & Polish
 - [x] Final testing in production environment
 - [x] Performance optimization
 - [x] Error handling and logging
