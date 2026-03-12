@@ -704,6 +704,20 @@ export default function Home() {
                       />
                     </div>
                     <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Email</label>
+                      <Input
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="bg-input border-border"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">Phone / WhatsApp</label>
                       <Input
                         placeholder="+66 82 982 4986"

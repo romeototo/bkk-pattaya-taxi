@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -7,7 +6,6 @@ import { AlertCircle, Lock, User } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 
 export default function AdminLogin() {
-  const [, navigate] = useLocation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,10 +14,12 @@ export default function AdminLogin() {
   const loginMutation = trpc.admin.login.useMutation({
     onSuccess: () => {
       // Redirect to admin dashboard
-      navigate('/admin');
+      setTimeout(() => {
+        window.location.href = window.location.origin + '/admin';
+      }, 100);
     },
     onError: (err) => {
-      setError(err.message || 'Login failed. Please try again.');
+      setError(err.message || 'Invalid username or password');
       setPassword('');
     },
   });

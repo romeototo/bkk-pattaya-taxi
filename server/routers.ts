@@ -108,12 +108,13 @@ export const appRouter = router({
           throw new Error("Invalid username or password");
         }
 
-        const cookieOptions = getSessionCookieOptions(ctx.req);
+        // Set admin_session cookie
         ctx.res.cookie("admin_session", JSON.stringify({ username: input.username, authenticated: true }), {
-          ...cookieOptions,
           maxAge: 24 * 60 * 60 * 1000,
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          httpOnly: false,  // Allow JavaScript to read for verification
+          secure: false,    // Allow in development
+          sameSite: "lax",
+          path: "/",
         });
 
         return { success: true, message: "Admin login successful" };

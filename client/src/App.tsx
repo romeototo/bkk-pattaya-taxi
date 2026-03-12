@@ -7,16 +7,19 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import AdminDashboardPro from "./pages/AdminDashboardPro";
 import AdminLogin from "./pages/AdminLogin";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import { TrackBooking } from "./pages/TrackBooking";
-
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/track"} component={TrackBooking} />
       <Route path={"/admin/login"} component={AdminLogin} />
-      <Route path={"/admin"} component={AdminDashboardPro} />
-      <Route path={"/admin/:rest*"} component={AdminDashboardPro} />
+      <Route path={"/admin"} component={() => (
+        <ProtectedAdminRoute>
+          <AdminDashboardPro />
+        </ProtectedAdminRoute>
+      )} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
