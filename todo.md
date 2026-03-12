@@ -238,3 +238,11 @@ Status: PRODUCTION READY ✅
 - [x] Add cookie-parser middleware to Express server
 - [x] Test bookings display and notifications together
 - [x] Save checkpoint
+
+## Phase 13: Fix Booking Submission & Telegram Notifications
+- [ ] Debug booking form submission - check if API is being called
+- [ ] Fix booking submission endpoint
+- [ ] Debug Telegram notification integration
+- [ ] Verify Telegram bot token and chat ID are correct
+- [ ] Test booking submission with Telegram notification
+- [ ] Save checkpoint

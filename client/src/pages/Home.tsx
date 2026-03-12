@@ -266,6 +266,21 @@ export default function Home() {
   const createBooking = trpc.booking.create.useMutation({
     onSuccess: () => {
       toast.success(t.booking.success);
+      console.log('[Home] Booking created successfully');
+      // Reset form
+      setFormData({
+        fullName: "",
+        phone: "",
+        email: "",
+        pickupLocation: "",
+        dropoffLocation: "",
+        travelDate: "",
+        travelTime: "",
+        passengers: "2",
+        luggage: "2",
+        preferredContactMethod: "whatsapp",
+        notes: "",
+      });
       // Open WhatsApp with booking details
       const msg = encodeURIComponent(
         `Hello! I'd like to book a transfer:\n\n` +
@@ -282,13 +297,14 @@ export default function Home() {
       window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
     },
     onError: (err) => {
-      toast.error("Failed to send booking. Please try again or contact us directly.");
-      console.error(err);
+      console.error('[Home] Booking error:', err);
+      toast.error(`Failed to send booking: ${err.message || 'Please try again or contact us directly.'}`);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[Home] Form data before submit:', formData);
     createBooking.mutate({
       ...formData,
       passengers: parseInt(formData.passengers),
@@ -726,6 +742,48 @@ export default function Home() {
                         className="bg-input border-border"
                         required
                       />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Number of Passengers</label>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="15"
+                        value={formData.passengers}
+                        onChange={(e) => setFormData({ ...formData, passengers: e.target.value })}
+                        className="bg-input border-border"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Luggage</label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="20"
+                        value={formData.luggage}
+                        onChange={(e) => setFormData({ ...formData, luggage: e.target.value })}
+                        className="bg-input border-border"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Preferred Contact Method</label>
+                      <Select value={formData.preferredContactMethod} onValueChange={(val) => setFormData({ ...formData, preferredContactMethod: val as any })}>
+                        <SelectTrigger className="bg-input border-border">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="phone">Phone</SelectItem>
+                          <SelectItem value="line">LINE</SelectItem>
+                          <SelectItem value="telegram">Telegram</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
