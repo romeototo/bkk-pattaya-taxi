@@ -271,3 +271,60 @@ export async function getUserByOpenId(openId: string) {
   const user = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return user[0] || null;
 }
+
+
+export async function sendTelegramNotification(booking: any) {
+  const { telegramBotToken, telegramChatId } = ENV;
+  
+  if (!telegramBotToken || !telegramChatId) {
+    console.warn("[Telegram] Bot token or chat ID not configured");
+    return false;
+  }
+
+  try {
+    const message = `
+🚕 **New Booking Received**
+
+👤 Name: ${booking.fullName}
+📱 Phone: ${booking.phone}
+📧 Email: ${booking.email}
+
+📍 Pickup: ${booking.pickupLocation}
+📍 Dropoff: ${booking.dropoffLocation}
+
+📅 Date: ${booking.travelDate}
+⏰ Time: ${booking.travelTime}
+👥 Passengers: ${booking.passengers}
+🧳 Luggage: ${booking.luggage}
+
+📞 Contact: ${booking.preferredContactMethod}
+${booking.notes ? `📝 Notes: ${booking.notes}` : ''}
+
+Status: ${booking.status}
+    `.trim();
+
+    const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: telegramChatId,
+        text: message,
+        parse_mode: "Markdown",
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("[Telegram] Failed to send message:", error);
+      return false;
+    }
+
+    console.log("[Telegram] Notification sent successfully");
+    return true;
+  } catch (error) {
+    console.error("[Telegram] Error sending notification:", error);
+    return false;
+  }
+}

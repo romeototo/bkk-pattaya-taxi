@@ -229,3 +229,12 @@ Status: PRODUCTION READY ✅
 - [x] Write unit tests for admin authentication
 - [x] Fix "Verifying access..." loading issue with timeout
 - [x] Save checkpoint
+
+## Phase 12: Fix Bookings Display & Telegram Notifications
+- [x] Debug why bookings are not loading in admin dashboard
+- [x] Fix booking query in admin.getBookings procedure
+- [x] Verify bookings display correctly in dashboard
+- [x] Implement Telegram notification for new bookings
+- [x] Add cookie-parser middleware to Express server
+- [x] Test bookings display and notifications together
+- [x] Save checkpoint

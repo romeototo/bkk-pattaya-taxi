@@ -3,7 +3,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, adminProcedure, adminSessionProcedure } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { z } from "zod";
-import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, hashPassword } from "./db";
+import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, hashPassword, sendTelegramNotification } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { invokeLLM } from "./_core/llm";
 
@@ -83,9 +83,26 @@ export const appRouter = router({
           status: "pending",
         });
 
+        // Send notifications
         await notifyOwner({
           title: "New Booking Received",
           content: `New booking from ${input.fullName} (${input.phone}) - ${input.pickupLocation} to ${input.dropoffLocation} on ${input.travelDate}`,
+        });
+
+        // Send Telegram notification
+        await sendTelegramNotification({
+          fullName: input.fullName,
+          phone: input.phone,
+          email: input.email,
+          pickupLocation: input.pickupLocation,
+          dropoffLocation: input.dropoffLocation,
+          travelDate: input.travelDate,
+          travelTime: input.travelTime,
+          passengers: input.passengers,
+          luggage: input.luggage,
+          preferredContactMethod: input.preferredContactMethod,
+          notes: input.notes,
+          status: "pending",
         });
 
         return booking;
