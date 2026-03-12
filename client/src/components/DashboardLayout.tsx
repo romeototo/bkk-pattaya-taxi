@@ -222,7 +222,24 @@ function DashboardLayoutContent({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
-                  onClick={logout}
+                  onClick={async () => {
+                    // Check if this is admin session
+                    const adminSession = document.cookie.split('; ').find(row => row.startsWith('admin_session='));
+                    if (adminSession) {
+                      // Call admin logout
+                      try {
+                        await fetch('/api/trpc/admin.logout', { method: 'POST' });
+                      } catch (error) {
+                        console.error('Logout error:', error);
+                      }
+                      // Clear admin session cookie
+                      document.cookie = 'admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                      setLocation('/admin/login');
+                    } else {
+                      // Regular user logout
+                      await logout();
+                    }
+                  }}
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />

@@ -38,11 +38,11 @@ export function ChatWidget({ lang = "en" }: { lang?: "en" | "th" }) {
 
   const suggestedPrompts = lang === "th" ? SUGGESTED_PROMPTS_TH : SUGGESTED_PROMPTS_EN;
 
-  const chatMutation = trpc.chat.send.useMutation({
-    onSuccess: (data) => {
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+  const chatMutation = trpc.chatbot.chat.useMutation({
+    onSuccess: (data: any) => {
+      setMessages((prev) => [...prev, { role: "assistant", content: data.message }]);
     },
-    onError: (err) => {
+    onError: (err: any) => {
       toast.error("Sorry, I couldn't process your message. Please try again.");
       console.error("Chat error:", err);
     },
@@ -72,7 +72,10 @@ export function ChatWidget({ lang = "en" }: { lang?: "en" | "th" }) {
     const newMessages: ChatMessage[] = [...messages, { role: "user", content: trimmed }];
     setMessages(newMessages);
     setInput("");
-    chatMutation.mutate({ messages: newMessages });
+    chatMutation.mutate({
+      message: trimmed,
+      conversationHistory: messages,
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {

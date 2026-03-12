@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,10 +67,22 @@ const statusColors: Record<BookingStatus, string> = {
 
 export default function AdminDashboardPro() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  // Check admin authentication
+  useEffect(() => {
+    const adminSession = document.cookie.split('; ').find(row => row.startsWith('admin_session='));
+    if (!adminSession) {
+      navigate('/admin/login');
+    } else {
+      setIsAuthorized(true);
+    }
+  }, [navigate]);
 
   // Handle delete booking
   const handleDeleteBooking = async (bookingId: number) => {
@@ -183,8 +196,17 @@ export default function AdminDashboardPro() {
     toast.success("CSV exported successfully");
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (!isAuthorized) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Verifying access...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
   }
 
   return (

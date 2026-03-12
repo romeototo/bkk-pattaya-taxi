@@ -58,3 +58,17 @@ export const notificationSettings = mysqlTable("notificationSettings", {
 
 export type NotificationSettings = typeof notificationSettings.$inferSelect;
 export type InsertNotificationSettings = typeof notificationSettings.$inferInsert;
+
+export const adminCredentials = mysqlTable("adminCredentials", {
+  id: int("id").autoincrement().primaryKey(),
+  username: varchar("username", { length: 100 }).notNull().unique(),
+  passwordHash: varchar("passwordHash", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  isActive: mysqlEnum("isActive", ["true", "false"]).default("true").notNull(),
+  lastLogin: timestamp("lastLogin"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AdminCredential = typeof adminCredentials.$inferSelect;
+export type InsertAdminCredential = typeof adminCredentials.$inferInsert;

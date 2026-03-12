@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 
 export function NotificationSettings() {
+  const { user } = useAuth();
   const { data: settings, isLoading } = trpc.notifications.getSettings.useQuery();
   const updateAdminChannels = trpc.notifications.updateAdminChannels.useMutation();
   const updateUserPreferences = trpc.notifications.updateUserPreferences.useMutation();
@@ -20,12 +22,15 @@ export function NotificationSettings() {
   const [notifyOnConfirmed, setNotifyOnConfirmed] = useState(settings?.notifyOnConfirmed === "true");
   const [notifyOnCompleted, setNotifyOnCompleted] = useState(settings?.notifyOnCompleted === "true");
   const [notifyOnCancelled, setNotifyOnCancelled] = useState(settings?.notifyOnCancelled === "true");
-  const [enableScheduled, setEnableScheduled] = useState(settings?.enableScheduledNotifications === "true");
-  const [scheduledMinutes, setScheduledMinutes] = useState(settings?.scheduledNotificationMinutesBefore || 60);
 
   const handleSaveAdminChannels = async () => {
+    if (!user) {
+      toast.error("You must be logged in");
+      return;
+    }
     try {
       await updateAdminChannels.mutateAsync({
+        userId: user.id,
         lineToken: lineToken || undefined,
         emailEnabled,
         telegramChatId: telegramChatId || undefined,
@@ -37,14 +42,17 @@ export function NotificationSettings() {
   };
 
   const handleSaveUserPreferences = async () => {
+    if (!user) {
+      toast.error("You must be logged in");
+      return;
+    }
     try {
       await updateUserPreferences.mutateAsync({
+        userId: user.id,
         emailNotifications,
         notifyOnConfirmed,
         notifyOnCompleted,
         notifyOnCancelled,
-        enableScheduledNotifications: enableScheduled,
-        scheduledMinutesBefore: scheduledMinutes,
       });
       toast.success("User notification preferences updated");
     } catch (error) {
@@ -148,31 +156,6 @@ export function NotificationSettings() {
               </div>
               <Switch checked={notifyOnCancelled} onCheckedChange={setNotifyOnCancelled} />
             </div>
-          </div>
-
-          {/* Scheduled Notifications */}
-          <div className="space-y-3 border-t pt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label>Reminder Notification</Label>
-                <p className="text-xs text-muted-foreground">Get notified before your trip</p>
-              </div>
-              <Switch checked={enableScheduled} onCheckedChange={setEnableScheduled} />
-            </div>
-
-            {enableScheduled && (
-              <div className="space-y-2 ml-4">
-                <Label htmlFor="scheduledMinutes">Minutes before trip</Label>
-                <Input
-                  id="scheduledMinutes"
-                  type="number"
-                  min="15"
-                  max="1440"
-                  value={scheduledMinutes}
-                  onChange={(e) => setScheduledMinutes(parseInt(e.target.value))}
-                />
-              </div>
-            )}
           </div>
 
           <Button onClick={handleSaveUserPreferences} disabled={updateUserPreferences.isPending}>

@@ -1,7 +1,9 @@
-import { eq, desc, sql, like, or, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, bookings, InsertBooking, notificationSettings, InsertNotificationSettings } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { adminCredentials, InsertAdminCredential } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -51,146 +53,141 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.lastSignedIn = user.lastSignedIn;
       updateSet.lastSignedIn = user.lastSignedIn;
     }
+
     if (user.role !== undefined) {
       values.role = user.role;
       updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
     }
 
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
+    await db
+      .insert(users)
+      .values(values)
+      .onDuplicateKeyUpdate({
+        set: updateSet,
+      });
   } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
+    console.error("[Database] Error upserting user:", error);
     throw error;
   }
 }
 
-export async function getUserByOpenId(openId: string) {
+export async function createBooking(data: InsertBooking) {
   const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const result = await db.insert(bookings).values(data);
+    return result;
+  } catch (error) {
+    console.error("[Database] Error creating booking:", error);
+    throw error;
   }
-
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
-}
-
-// Booking helpers
-export async function createBooking(booking: InsertBooking) {
-  const db = await getDb();
-  if (!db) {
-    throw new Error("Database not available");
-  }
-  const result = await db.insert(bookings).values(booking);
-  return result;
 }
 
 export async function getBookings() {
   const db = await getDb();
-  if (!db) {
-    return [];
+  if (!db) throw new Error("Database not available");
+
+  try {
+    return await db.select().from(bookings);
+  } catch (error) {
+    console.error("[Database] Error getting bookings:", error);
+    throw error;
   }
-  return db.select().from(bookings).orderBy(desc(bookings.createdAt));
 }
 
 export async function getBookingById(id: number) {
   const db = await getDb();
-  if (!db) {
-    return undefined;
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const result = await db.select().from(bookings).where(eq(bookings.id, id));
+    return result[0] || null;
+  } catch (error) {
+    console.error("[Database] Error getting booking:", error);
+    throw error;
   }
-  const result = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
 }
 
-// Admin booking helpers
-export async function updateBookingStatus(id: number, status: "pending" | "confirmed" | "completed" | "cancelled") {
+export async function updateBookingStatus(id: number, status: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(bookings).set({ status }).where(eq(bookings.id, id));
-  return getBookingById(id);
+
+  try {
+    await db.update(bookings).set({ status: status as any }).where(eq(bookings.id, id));
+    return getBookingById(id);
+  } catch (error) {
+    console.error("[Database] Error updating booking:", error);
+    throw error;
+  }
 }
 
 export async function getBookingStats() {
   const db = await getDb();
-  if (!db) return { total: 0, pending: 0, confirmed: 0, completed: 0, cancelled: 0, today: 0 };
+  if (!db) throw new Error("Database not available");
 
-  const allBookings = await db.select().from(bookings);
-  const today = new Date().toISOString().split("T")[0];
-
-  return {
-    total: allBookings.length,
-    pending: allBookings.filter(b => b.status === "pending").length,
-    confirmed: allBookings.filter(b => b.status === "confirmed").length,
-    completed: allBookings.filter(b => b.status === "completed").length,
-    cancelled: allBookings.filter(b => b.status === "cancelled").length,
-    today: allBookings.filter(b => b.travelDate === today).length,
-  };
+  try {
+    const allBookings = await db.select().from(bookings);
+    return {
+      total: allBookings.length,
+      pending: allBookings.filter(b => b.status === "pending").length,
+      confirmed: allBookings.filter(b => b.status === "confirmed").length,
+      completed: allBookings.filter(b => b.status === "completed").length,
+      cancelled: allBookings.filter(b => b.status === "cancelled").length,
+    };
+  } catch (error) {
+    console.error("[Database] Error getting booking stats:", error);
+    throw error;
+  }
 }
 
-export async function searchBookings(query: string, statusFilter?: string) {
+export async function searchBookings(query: string) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) throw new Error("Database not available");
 
-  const conditions = [];
-
-  if (query && query.trim()) {
-    const searchTerm = `%${query.trim()}%`;
-    conditions.push(
-      or(
-        like(bookings.pickupLocation, searchTerm),
-        like(bookings.dropoffLocation, searchTerm),
-        like(bookings.fullName, searchTerm),
-        like(bookings.phone, searchTerm),
-        like(bookings.email, searchTerm),
-      )
+  try {
+    const allBookings = await db.select().from(bookings);
+    const lowerQuery = query.toLowerCase();
+    return allBookings.filter(b =>
+      b.fullName.toLowerCase().includes(lowerQuery) ||
+      b.phone.includes(query) ||
+      b.email.toLowerCase().includes(lowerQuery)
     );
+  } catch (error) {
+    console.error("[Database] Error searching bookings:", error);
+    throw error;
   }
-
-  if (statusFilter && statusFilter !== "all") {
-    conditions.push(eq(bookings.status, statusFilter as "pending" | "confirmed" | "completed" | "cancelled"));
-  }
-
-  if (conditions.length === 0) {
-    return db.select().from(bookings).orderBy(desc(bookings.createdAt));
-  }
-
-  return db.select().from(bookings)
-    .where(conditions.length === 1 ? conditions[0] : and(...conditions))
-    .orderBy(desc(bookings.createdAt));
 }
 
-// Notification settings helpers
 export async function getNotificationSettings(userId: number) {
   const db = await getDb();
-  if (!db) return undefined;
-  const result = await db.select().from(notificationSettings).where(eq(notificationSettings.userId, userId)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const settings = await db.select().from(notificationSettings).where(eq(notificationSettings.userId, userId));
+    return settings[0] || null;
+  } catch (error) {
+    console.error("[Database] Error getting notification settings:", error);
+    throw error;
+  }
 }
 
 export async function upsertNotificationSettings(userId: number, settings: Partial<InsertNotificationSettings>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  
-  const existing = await getNotificationSettings(userId);
-  if (existing) {
-    await db.update(notificationSettings).set(settings).where(eq(notificationSettings.userId, userId));
-  } else {
-    await db.insert(notificationSettings).values({ userId, ...settings });
+
+  try {
+    const existing = await getNotificationSettings(userId);
+    if (existing) {
+      await db.update(notificationSettings).set(settings).where(eq(notificationSettings.userId, userId));
+    } else {
+      await db.insert(notificationSettings).values({ userId, ...settings });
+    }
+    return getNotificationSettings(userId);
+  } catch (error) {
+    console.error("[Database] Error upserting notification settings:", error);
+    throw error;
   }
-  return getNotificationSettings(userId);
 }
 
 export async function updateAdminNotificationChannels(userId: number, channels: { lineToken?: string; emailEnabled?: boolean; telegramChatId?: string }) {
@@ -218,4 +215,59 @@ export async function updateUserNotificationPreferences(userId: number, prefs: {
   if (prefs.scheduledMinutesBefore !== undefined) updateData.scheduledNotificationMinutesBefore = prefs.scheduledMinutesBefore;
   
   return upsertNotificationSettings(userId, updateData);
+}
+
+// Admin Authentication Functions
+
+export async function getAdminByUsername(username: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const admin = await db.select().from(adminCredentials).where(eq(adminCredentials.username, username)).limit(1);
+  return admin[0] || null;
+}
+
+export async function createAdminCredential(data: InsertAdminCredential) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(adminCredentials).values(data);
+  return result;
+}
+
+export async function updateAdminLastLogin(adminId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(adminCredentials).set({ lastLogin: new Date() }).where(eq(adminCredentials.id, adminId));
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
+}
+
+export async function verifyAdminPassword(username: string, password: string): Promise<{ id: number; username: string; email: string } | null> {
+  const admin = await getAdminByUsername(username);
+  if (!admin) return null;
+  
+  const isPasswordValid = await bcrypt.compare(password, admin.passwordHash);
+  if (!isPasswordValid) return null;
+  if (admin.isActive !== "true") return null;
+  
+  await updateAdminLastLogin(admin.id);
+  
+  return {
+    id: admin.id,
+    username: admin.username,
+    email: admin.email,
+  };
+}
+
+
+export async function getUserByOpenId(openId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const user = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  return user[0] || null;
 }

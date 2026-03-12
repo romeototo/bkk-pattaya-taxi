@@ -1,9 +1,9 @@
 import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, adminProcedure } from "./_core/trpc";
+import { getSessionCookieOptions } from "./_core/cookies";
 import { z } from "zod";
-import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences } from "./db";
+import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, hashPassword } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { invokeLLM } from "./_core/llm";
 
@@ -79,28 +79,52 @@ export const appRouter = router({
           passengers: input.passengers,
           luggage: input.luggage,
           preferredContactMethod: input.preferredContactMethod,
-          notes: input.notes ?? null,
+          notes: input.notes,
+          status: "pending",
         });
 
-        try {
-          await notifyOwner({
-            title: "New Booking Inquiry",
-            content: `New booking from ${input.fullName} (${input.phone})\n\nRoute: ${input.pickupLocation} → ${input.dropoffLocation}\nDate: ${input.travelDate} at ${input.travelTime}\nPassengers: ${input.passengers}, Luggage: ${input.luggage}\nPreferred Contact: ${input.preferredContactMethod}\n${input.notes ? `Notes: ${input.notes}` : ""}`,
-          });
-        } catch (e) {
-          console.error("Failed to notify owner:", e);
-        }
+        await notifyOwner({
+          title: "New Booking Received",
+          content: `New booking from ${input.fullName} (${input.phone}) - ${input.pickupLocation} to ${input.dropoffLocation} on ${input.travelDate}`,
+        });
 
-        return { success: true, bookingId: booking[0].insertId };
+        return booking;
       }),
-
-    list: publicProcedure.query(async () => {
-      return getBookings();
-    }),
   }),
 
-  // Admin procedures
   admin: router({
+    login: publicProcedure
+      .input(z.object({
+        username: z.string().min(1, "Username is required"),
+        password: z.string().min(1, "Password is required"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Use environment variables for admin credentials
+        const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
+        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+
+        // Simple authentication for now (in production, use database + bcrypt)
+        if (input.username !== ADMIN_USERNAME || input.password !== ADMIN_PASSWORD) {
+          throw new Error("Invalid username or password");
+        }
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie("admin_session", JSON.stringify({ username: input.username, authenticated: true }), {
+          ...cookieOptions,
+          maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+        });
+
+        return { success: true, message: "Admin login successful" };
+      }),
+
+    logout: publicProcedure.mutation(({ ctx }) => {
+      const cookieOptions = getSessionCookieOptions(ctx.req);
+      ctx.res.clearCookie("admin_session", { ...cookieOptions, maxAge: -1 });
+      return { success: true };
+    }),
+
     bookings: router({
       list: adminProcedure
         .input(z.object({
@@ -108,8 +132,8 @@ export const appRouter = router({
           status: z.string().optional(),
         }).optional())
         .query(async ({ input }) => {
-          if (input?.query || input?.status) {
-            return searchBookings(input.query || "", input.status);
+          if (input?.query) {
+            return searchBookings(input.query || "");
           }
           return getBookings();
         }),
@@ -145,54 +169,68 @@ export const appRouter = router({
 
     updateAdminChannels: adminProcedure
       .input(z.object({
+        userId: z.number(),
         lineToken: z.string().optional(),
         emailEnabled: z.boolean().optional(),
         telegramChatId: z.string().optional(),
       }))
-      .mutation(async ({ input, ctx }) => {
-        const updated = await updateAdminNotificationChannels(ctx.user.id, input);
-        return { success: true, settings: updated };
+      .mutation(async ({ input }) => {
+        return updateAdminNotificationChannels(input.userId, {
+          lineToken: input.lineToken,
+          emailEnabled: input.emailEnabled,
+          telegramChatId: input.telegramChatId,
+        });
       }),
 
     updateUserPreferences: publicProcedure
       .input(z.object({
+        userId: z.number(),
         emailNotifications: z.boolean().optional(),
         notifyOnConfirmed: z.boolean().optional(),
         notifyOnCompleted: z.boolean().optional(),
         notifyOnCancelled: z.boolean().optional(),
-        enableScheduledNotifications: z.boolean().optional(),
-        scheduledMinutesBefore: z.number().optional(),
       }))
-      .mutation(async ({ input, ctx }) => {
-        if (!ctx.user) throw new Error("User not authenticated");
-        const updated = await updateUserNotificationPreferences(ctx.user.id, input);
-        return { success: true, settings: updated };
+      .mutation(async ({ input }) => {
+        return updateUserNotificationPreferences(input.userId, {
+          emailNotifications: input.emailNotifications,
+          notifyOnConfirmed: input.notifyOnConfirmed,
+          notifyOnCompleted: input.notifyOnCompleted,
+          notifyOnCancelled: input.notifyOnCancelled,
+        });
       }),
   }),
 
-  // AI Chatbot
-  chat: router({
-    send: publicProcedure
+  // Chatbot
+  chatbot: router({
+    chat: publicProcedure
       .input(z.object({
-        messages: z.array(z.object({
+        message: z.string().min(1, "Message is required"),
+        conversationHistory: z.array(z.object({
           role: z.enum(["user", "assistant"]),
           content: z.string(),
-        })),
+        })).optional(),
       }))
       .mutation(async ({ input }) => {
-        const llmMessages = [
+        const messages = [
           { role: "system" as const, content: CHATBOT_SYSTEM_PROMPT },
-          ...input.messages.map(m => ({
-            role: m.role as "user" | "assistant",
-            content: m.content,
-          })),
+          ...(input.conversationHistory || []),
+          { role: "user" as const, content: input.message },
         ];
 
-        const response = await invokeLLM({ messages: llmMessages });
-        const content = response.choices[0]?.message?.content;
-        const text = typeof content === "string" ? content : Array.isArray(content) ? content.map(c => 'text' in c ? c.text : '').join('') : '';
+        const response = await invokeLLM({
+          messages: messages as any,
+        });
 
-        return { reply: text };
+        const assistantMessage = response.choices[0]?.message?.content || "I'm sorry, I couldn't process your request. Please try again.";
+
+        return {
+          message: assistantMessage,
+          conversationHistory: [
+            ...(input.conversationHistory || []),
+            { role: "user" as const, content: input.message },
+            { role: "assistant" as const, content: assistantMessage },
+          ],
+        };
       }),
   }),
 });

@@ -61,7 +61,6 @@ function StatsCards() {
     { label: "Confirmed", value: stats?.confirmed ?? 0, icon: <CheckCircle className="w-5 h-5" />, color: "text-blue-500" },
     { label: "Completed", value: stats?.completed ?? 0, icon: <CheckCircle className="w-5 h-5" />, color: "text-green-500" },
     { label: "Cancelled", value: stats?.cancelled ?? 0, icon: <XCircle className="w-5 h-5" />, color: "text-red-500" },
-    { label: "Today", value: stats?.today ?? 0, icon: <TrendingUp className="w-5 h-5" />, color: "text-primary" },
   ];
 
   return (
