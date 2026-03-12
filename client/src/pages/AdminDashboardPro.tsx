@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,30 +66,10 @@ const statusColors: Record<BookingStatus, string> = {
 
 export default function AdminDashboardPro() {
   const { user } = useAuth();
-  const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(true);
-
-  // Verify admin session using tRPC
-  const { data: sessionData } = trpc.admin.verifySession.useQuery(undefined, {
-    refetchInterval: false,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    if (sessionData !== undefined) {
-      if (sessionData.authenticated) {
-        setIsAuthorized(true);
-      } else {
-        navigate('/admin/login');
-      }
-      setIsVerifying(false);
-    }
-  }, [sessionData, navigate]);
 
   // Handle delete booking
   const handleDeleteBooking = async (bookingId: number) => {
@@ -204,18 +183,7 @@ export default function AdminDashboardPro() {
     toast.success("CSV exported successfully");
   };
 
-  if (isVerifying || !isAuthorized) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Verifying access...</p>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
+
 
   return (
     <DashboardLayout>

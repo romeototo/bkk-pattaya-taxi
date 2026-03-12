@@ -1,6 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router, adminProcedure } from "./_core/trpc";
+import { publicProcedure, router, adminProcedure, adminSessionProcedure } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { z } from "zod";
 import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, hashPassword } from "./db";
@@ -139,7 +139,7 @@ export const appRouter = router({
     }),
 
     bookings: router({
-      list: adminProcedure
+      list: adminSessionProcedure
         .input(z.object({
           query: z.string().optional(),
           status: z.string().optional(),
@@ -151,13 +151,13 @@ export const appRouter = router({
           return getBookings();
         }),
 
-      getById: adminProcedure
+      getById: adminSessionProcedure
         .input(z.object({ id: z.number() }))
         .query(async ({ input }) => {
           return getBookingById(input.id);
         }),
 
-      updateStatus: adminProcedure
+      updateStatus: adminSessionProcedure
         .input(z.object({
           id: z.number(),
           status: z.enum(["pending", "confirmed", "completed", "cancelled"]),
@@ -167,7 +167,7 @@ export const appRouter = router({
           return { success: true, booking: updated };
         }),
 
-      stats: adminProcedure.query(async () => {
+      stats: adminSessionProcedure.query(async () => {
         return getBookingStats();
       }),
     }),

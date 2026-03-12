@@ -43,3 +43,29 @@ export const adminProcedure = t.procedure.use(
     });
   }),
 );
+
+export const adminSessionProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const { ctx, next } = opts;
+    const adminSession = ctx.req.cookies?.admin_session;
+
+    if (!adminSession) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin session not found" });
+    }
+
+    try {
+      const session = JSON.parse(adminSession);
+      if (!session.authenticated) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid admin session" });
+      }
+    } catch (error) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid admin session" });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+      },
+    });
+  }),
+);
