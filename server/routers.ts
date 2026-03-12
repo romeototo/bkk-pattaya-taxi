@@ -125,6 +125,19 @@ export const appRouter = router({
       return { success: true };
     }),
 
+    verifySession: publicProcedure.query(({ ctx }) => {
+      const adminSession = ctx.req.cookies?.admin_session;
+      if (!adminSession) {
+        return { authenticated: false };
+      }
+      try {
+        const session = JSON.parse(adminSession);
+        return { authenticated: session.authenticated === true, username: session.username };
+      } catch (error) {
+        return { authenticated: false };
+      }
+    }),
+
     bookings: router({
       list: adminProcedure
         .input(z.object({

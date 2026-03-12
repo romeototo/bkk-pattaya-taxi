@@ -73,26 +73,24 @@ export default function AdminDashboardPro() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(true);
 
-  // Check admin authentication
-  useEffect(() => {
-    const adminSession = document.cookie.split('; ').find(row => row.startsWith('admin_session='));
-    if (adminSession) {
-      setIsAuthorized(true);
-    } else {
-      navigate('/admin/login');
-    }
-  }, [navigate]);
+  // Verify admin session using tRPC
+  const { data: sessionData } = trpc.admin.verifySession.useQuery(undefined, {
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
 
-  // Timeout to prevent infinite loading
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isAuthorized) {
+    if (sessionData !== undefined) {
+      if (sessionData.authenticated) {
+        setIsAuthorized(true);
+      } else {
         navigate('/admin/login');
       }
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [isAuthorized, navigate]);
+      setIsVerifying(false);
+    }
+  }, [sessionData, navigate]);
 
   // Handle delete booking
   const handleDeleteBooking = async (bookingId: number) => {
@@ -206,7 +204,7 @@ export default function AdminDashboardPro() {
     toast.success("CSV exported successfully");
   };
 
-  if (!isAuthorized) {
+  if (isVerifying || !isAuthorized) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-screen">
