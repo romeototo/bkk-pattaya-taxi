@@ -34,7 +34,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Download, Search, Filter } from "lucide-react";
+import { Download, Search, Filter, Phone, MapPin, Calendar, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";

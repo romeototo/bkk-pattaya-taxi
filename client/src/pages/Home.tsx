@@ -690,34 +690,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-5">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.passengers}</label>
-                      <Select value={formData.passengers} onValueChange={(v) => setFormData({ ...formData, passengers: v })}>
-                        <SelectTrigger className="bg-input border-border">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                            <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "passenger" : "passengers"}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.luggage}</label>
-                      <Select value={formData.luggage} onValueChange={(v) => setFormData({ ...formData, luggage: v })}>
-                        <SelectTrigger className="bg-input border-border">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                            <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "piece" : "pieces"}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
@@ -742,44 +715,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-5">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Email</label>
-                      <Input
-                        type="email"
-                        placeholder="your@email.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="bg-input border-border"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Preferred Contact Method</label>
-                      <Select value={formData.preferredContactMethod} onValueChange={(v) => setFormData({ ...formData, preferredContactMethod: v })}>
-                        <SelectTrigger className="bg-input border-border">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                          <SelectItem value="email">Email</SelectItem>
-                          <SelectItem value="phone">Phone</SelectItem>
-                          <SelectItem value="line">LINE</SelectItem>
-                          <SelectItem value="telegram">Telegram</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
 
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.notes}</label>
-                    <Textarea
-                      placeholder="e.g., Child seat needed, flight number..."
-                      value={formData.notes}
-                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="bg-input border-border min-h-[80px]"
-                    />
-                  </div>
 
                   <Button
                     type="submit"

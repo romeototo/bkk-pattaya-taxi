@@ -188,3 +188,29 @@ Status: PRODUCTION READY ✅
 - [ ] Add notification retry logic for failed sends
 - [ ] Document notification system setup
 
+
+
+## Phase 9: MVP Simplification (3 Key Improvements)
+- [x] Simplify booking form - keep only: name, phone, date, time, pickup, dropoff
+- [x] Remove email, passengers, luggage, contact method, notes fields
+- [x] Create track booking page - customers can check status with phone + booking code
+- [x] Add TrackBooking route (/track)
+- [ ] Streamline admin dashboard - show only essential info
+- [ ] Add quick action buttons (confirm/cancel) in admin dashboard
+- [ ] Test all changes
+- [ ] Save checkpoint
+
+
+## Phase 10: SEO & AEO Optimization
+- [ ] Add meta tags (title, description, keywords) to all pages
+- [ ] Add Schema.org structured data (LocalBusiness, Service)
+- [ ] Create sitemap.xml
+- [ ] Create robots.txt
+- [ ] Add Open Graph tags for social sharing
+- [ ] Optimize page titles and meta descriptions
+- [ ] Add canonical tags
+- [ ] Improve heading structure (H1, H2, H3)
+- [ ] Add alt text to images
+- [ ] Create SEO-friendly URLs
+- [ ] Test with Google Search Console
+- [ ] Test with Lighthouse
