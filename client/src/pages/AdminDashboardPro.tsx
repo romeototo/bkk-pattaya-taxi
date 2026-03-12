@@ -77,12 +77,22 @@ export default function AdminDashboardPro() {
   // Check admin authentication
   useEffect(() => {
     const adminSession = document.cookie.split('; ').find(row => row.startsWith('admin_session='));
-    if (!adminSession) {
-      navigate('/admin/login');
-    } else {
+    if (adminSession) {
       setIsAuthorized(true);
+    } else {
+      navigate('/admin/login');
     }
   }, [navigate]);
+
+  // Timeout to prevent infinite loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isAuthorized) {
+        navigate('/admin/login');
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [isAuthorized, navigate]);
 
   // Handle delete booking
   const handleDeleteBooking = async (bookingId: number) => {
