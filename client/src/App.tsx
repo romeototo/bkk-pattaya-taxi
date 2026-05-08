@@ -9,7 +9,7 @@ import AdminDashboardPro from "./pages/AdminDashboardPro";
 import AdminLogin from "./pages/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import { TrackBooking } from "./pages/TrackBooking";
-function AppRouter
+function AppRouter() {
   return (
     
       <Router base={import.meta.env.BASE_URL}>
