@@ -1,13 +1,12 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ChatWidget } from "@/components/ChatWidget";
-import { PlacesAutocomplete } from "@/components/PlacesAutocomplete";
+import { LocationSelect } from "@/components/LocationSelect";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
@@ -84,14 +83,15 @@ const translations = {
       dropoff: "Drop-off Location",
       date: "Date",
       time: "Time",
-      passengers: "Passengers",
-      luggage: "Luggage (pieces)",
-      contact: "Contact (WhatsApp / Email / Phone)",
+      fullName: "Full Name",
+      email: "Email",
+      phone: "Phone / WhatsApp",
+      passengers: "Number of Passengers",
+      luggage: "Luggage",
       contactMethod: "Preferred Contact Method",
       notes: "Special Requests or Notes",
-      submit: "Send Booking Inquiry",
-      success: "Booking inquiry sent successfully! We will contact you shortly.",
-      whatsappMsg: "Opening WhatsApp with your booking details...",
+      submit: "Send Booking via WhatsApp",
+      success: "Opening WhatsApp with your booking details...",
     },
     gallery: {
       title: "Our Fleet & Destinations",
@@ -123,7 +123,7 @@ const translations = {
       contactInfo: "Contact Info",
       serviceAreas: "Service Areas",
       areas: ["Bangkok City Center", "Suvarnabhumi Airport (BKK)", "Don Mueang Airport (DMK)", "Pattaya", "Jomtien Beach", "Walking Street Pattaya"],
-      copyright: "© 2025 BKK Pattaya Private Taxi. All rights reserved.",
+      copyright: `© ${new Date().getFullYear()} BKK Pattaya Private Taxi. All rights reserved.`,
     },
   },
   th: {
@@ -141,10 +141,10 @@ const translations = {
       title: "เส้นทางยอดนิยม",
       subtitle: "เลือกเส้นทางและเพลิดเพลินกับการเดินทางที่สะดวกสบาย",
       routes: [
-        { name: "กรุงเทพ → พัทยา", price: "เริ่มต้น ฿1,200", desc: "บริการรับส่งส่วนตัวจากทุกที่ในกรุงเทพไปโรงแรมในพัทยา ใช้เวลาประมาณ 1.5-2 ชั่วโมง", icon: "car" },
-        { name: "พัทยา → กรุงเทพ", price: "เริ่มต้น ฿1,200", desc: "บริการรับส่งกลับจากพัทยาไปกรุงเทพ สะดวกและเชื่อถือได้", icon: "car" },
-        { name: "สนามบินสุวรรณภูมิ → พัทยา", price: "เริ่มต้น ฿1,100", desc: "พบคนขับที่ห้องรับผู้โดยสาร พร้อมป้ายชื่อและช่วยขนกระเป๋า", icon: "plane" },
-        { name: "สนามบินดอนเมือง → พัทยา", price: "เริ่มต้น ฿1,300", desc: "รับจากสนามบินดอนเมือง พร้อมติดตามเที่ยวบินและเวลารอฟรี", icon: "plane" },
+        { name: "กรุงเทพ → พัทยา", price: "เริ่มต้น ฿1,500", desc: "บริการรับส่งส่วนตัวจากทุกที่ในกรุงเทพไปโรงแรมในพัทยา ใช้เวลาประมาณ 1.5-2 ชั่วโมง", icon: "car" },
+        { name: "พัทยา → กรุงเทพ", price: "เริ่มต้น ฿1,500", desc: "บริการรับส่งกลับจากพัทยาไปกรุงเทพ สะดวกและเชื่อถือได้", icon: "car" },
+        { name: "สนามบินสุวรรณภูมิ → พัทยา", price: "เริ่มต้น ฿1,500", desc: "พบคนขับที่ห้องรับผู้โดยสาร พร้อมป้ายชื่อและช่วยขนกระเป๋า", icon: "plane" },
+        { name: "สนามบินดอนเมือง → พัทยา", price: "เริ่มต้น ฿1,500", desc: "รับจากสนามบินดอนเมือง พร้อมติดตามเที่ยวบินและเวลารอฟรี", icon: "plane" },
       ],
     },
     whyUs: {
@@ -178,14 +178,15 @@ const translations = {
       dropoff: "สถานที่ส่ง",
       date: "วันที่",
       time: "เวลา",
+      fullName: "ชื่อ-นามสกุล",
+      email: "อีเมล",
+      phone: "เบอร์โทร / WhatsApp",
       passengers: "จำนวนผู้โดยสาร",
       luggage: "จำนวนกระเป๋า",
-      contact: "ข้อมูลติดต่อ (WhatsApp / อีเมล / โทรศัพท์)",
       contactMethod: "ช่องทางติดต่อที่ต้องการ",
       notes: "คำขอพิเศษหรือหมายเหตุ",
-      submit: "ส่งคำขอจอง",
-      success: "ส่งคำขอจองสำเร็จ! เราจะติดต่อกลับในเร็วๆ นี้",
-      whatsappMsg: "กำลังเปิด WhatsApp พร้อมรายละเอียดการจอง...",
+      submit: "ส่งคำขอจองผ่าน WhatsApp",
+      success: "กำลังเปิด WhatsApp พร้อมรายละเอียดการจอง...",
     },
     gallery: {
       title: "รถและจุดหมายปลายทาง",
@@ -217,7 +218,7 @@ const translations = {
       contactInfo: "ข้อมูลติดต่อ",
       serviceAreas: "พื้นที่ให้บริการ",
       areas: ["ใจกลางกรุงเทพ", "สนามบินสุวรรณภูมิ (BKK)", "สนามบินดอนเมือง (DMK)", "พัทยา", "หาดจอมเทียน", "วอล์คกิ้งสตรีทพัทยา"],
-      copyright: "© 2025 BKK Pattaya Private Taxi สงวนลิขสิทธิ์",
+      copyright: `© ${new Date().getFullYear()} BKK Pattaya Private Taxi สงวนลิขสิทธิ์`,
     },
   },
 };
@@ -263,54 +264,44 @@ export default function Home() {
     notes: "",
   });
 
-  const createBooking = trpc.booking.create.useMutation({
-    onSuccess: () => {
-      toast.success(t.booking.success);
-      console.log('[Home] Booking created successfully');
-      // Reset form
-      setFormData({
-        fullName: "",
-        phone: "",
-        email: "",
-        pickupLocation: "",
-        dropoffLocation: "",
-        travelDate: "",
-        travelTime: "",
-        passengers: "2",
-        luggage: "2",
-        preferredContactMethod: "whatsapp",
-        notes: "",
-      });
-      // Open WhatsApp with booking details
-      const msg = encodeURIComponent(
-        `Hello! I'd like to book a transfer:\n\n` +
-        `👤 Name: ${formData.fullName}\n` +
-        `📞 Phone: ${formData.phone}\n` +
-        `📍 From: ${formData.pickupLocation}\n` +
-        `📍 To: ${formData.dropoffLocation}\n` +
-        `📅 Date: ${formData.travelDate}\n` +
-        `🕐 Time: ${formData.travelTime}\n` +
-        `👥 Passengers: ${formData.passengers}\n` +
-        `🧳 Luggage: ${formData.luggage}\n` +
-        `${formData.notes ? `📝 Notes: ${formData.notes}` : ""}`
-      );
-      window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
-    },
-    onError: (err) => {
-      console.error('[Home] Booking error:', err);
-      toast.error(`Failed to send booking: ${err.message || 'Please try again or contact us directly.'}`);
-    },
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('[Home] Form data before submit:', formData);
-    createBooking.mutate({
-      ...formData,
-      passengers: parseInt(formData.passengers),
-      luggage: parseInt(formData.luggage),
-      preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
+    setIsSubmitting(true);
+
+    const msg = encodeURIComponent(
+      `Hello! I'd like to book a transfer:\n\n` +
+      `👤 Name: ${formData.fullName}\n` +
+      `📞 Phone: ${formData.phone}\n` +
+      `📧 Email: ${formData.email}\n` +
+      `📍 From: ${formData.pickupLocation}\n` +
+      `📍 To: ${formData.dropoffLocation}\n` +
+      `📅 Date: ${formData.travelDate}\n` +
+      `🕐 Time: ${formData.travelTime}\n` +
+      `👥 Passengers: ${formData.passengers}\n` +
+      `🧳 Luggage: ${formData.luggage}\n` +
+      `${formData.notes ? `📝 Notes: ${formData.notes}` : ""}`
+    );
+
+    toast.success(t.booking.success);
+    window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
+
+    // Reset form
+    setFormData({
+      fullName: "",
+      phone: "",
+      email: "",
+      pickupLocation: "",
+      dropoffLocation: "",
+      travelDate: "",
+      travelTime: "",
+      passengers: "2",
+      luggage: "2",
+      preferredContactMethod: "whatsapp",
+      notes: "",
     });
+    setIsSubmitting(false);
   };
 
   const scrollTo = (id: string) => {
@@ -663,22 +654,20 @@ export default function Home() {
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup}</label>
-                      <PlacesAutocomplete
+                      <LocationSelect
                         value={formData.pickupLocation}
                         onChange={(val) => setFormData({ ...formData, pickupLocation: val })}
                         placeholder="e.g., Suvarnabhumi Airport"
                         className="bg-input border-border"
-                        required
                       />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff}</label>
-                      <PlacesAutocomplete
+                      <LocationSelect
                         value={formData.dropoffLocation}
                         onChange={(val) => setFormData({ ...formData, dropoffLocation: val })}
                         placeholder="e.g., Hilton Pattaya"
                         className="bg-input border-border"
-                        required
                       />
                     </div>
                   </div>
@@ -710,7 +699,7 @@ export default function Home() {
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Full Name</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.fullName}</label>
                       <Input
                         placeholder="Your full name"
                         value={formData.fullName}
@@ -720,7 +709,7 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Email</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.email}</label>
                       <Input
                         type="email"
                         placeholder="your.email@example.com"
@@ -734,7 +723,7 @@ export default function Home() {
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Phone / WhatsApp</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.phone}</label>
                       <Input
                         placeholder="+66 82 982 4986"
                         value={formData.phone}
@@ -744,7 +733,7 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Number of Passengers</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.passengers}</label>
                       <Input
                         type="number"
                         min="1"
@@ -759,7 +748,7 @@ export default function Home() {
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Luggage</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.luggage}</label>
                       <Input
                         type="number"
                         min="0"
@@ -771,7 +760,7 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">Preferred Contact Method</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.contactMethod}</label>
                       <Select value={formData.preferredContactMethod} onValueChange={(val) => setFormData({ ...formData, preferredContactMethod: val as any })}>
                         <SelectTrigger className="bg-input border-border">
                           <SelectValue />
@@ -793,9 +782,9 @@ export default function Home() {
                     type="submit"
                     size="lg"
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-base py-6 shadow-lg shadow-primary/25"
-                    disabled={createBooking.isPending}
+                    disabled={isSubmitting}
                   >
-                    {createBooking.isPending ? (
+                    {isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                         Sending...
