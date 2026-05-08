@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Router } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -9,9 +9,11 @@ import AdminDashboardPro from "./pages/AdminDashboardPro";
 import AdminLogin from "./pages/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import { TrackBooking } from "./pages/TrackBooking";
-function Router() {
+function AppRouter
   return (
-    <Switch>
+    
+      <Router base={import.meta.env.BASE_URL}>
+       < Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/track"} component={TrackBooking} />
       <Route path={"/admin/login"} component={AdminLogin} />
@@ -23,7 +25,7 @@ function Router() {
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
-  );
+      </Router>);
 }
 
 function App() {
@@ -32,7 +34,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <AppRouter />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
