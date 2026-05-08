@@ -46,10 +46,10 @@ const translations = {
       title: "Popular Routes",
       subtitle: "Choose your route and enjoy a comfortable private transfer",
       routes: [
-        { name: "Bangkok → Pattaya", price: "From ฿1,500", desc: "Door-to-door private transfer from any location in Bangkok to your hotel in Pattaya. Approximately 1.5-2 hours.", icon: "car" },
-        { name: "Pattaya → Bangkok", price: "From ฿1,500", desc: "Return transfer from Pattaya to Bangkok city center, hotel, or any location. Comfortable and reliable.", icon: "car" },
-        { name: "Suvarnabhumi Airport → Pattaya", price: "From ฿1,500", desc: "Meet & greet at arrival hall. Your driver will hold a name sign and assist with luggage.", icon: "plane" },
-        { name: "Don Mueang Airport → Pattaya", price: "From ฿1,500", desc: "Pickup from Don Mueang International Airport with flight monitoring and free waiting time.", icon: "plane" },
+        { name: "Bangkok → Pattaya", price: "From ฿1,200", desc: "Door-to-door private transfer from any location in Bangkok to your hotel in Pattaya. Approximately 1.5-2 hours.", icon: "car" },
+        { name: "Pattaya → Bangkok", price: "From ฿1,200", desc: "Return transfer from Pattaya to Bangkok city center, hotel, or any location. Comfortable and reliable.", icon: "car" },
+        { name: "Suvarnabhumi Airport → Pattaya", price: "From ฿1,100", desc: "Meet & greet at arrival hall. Your driver will hold a name sign and assist with luggage.", icon: "plane" },
+        { name: "Don Mueang Airport → Pattaya", price: "From ฿1,300", desc: "Pickup from Don Mueang International Airport with flight monitoring and free waiting time.", icon: "plane" },
       ],
     },
     whyUs: {
@@ -141,10 +141,10 @@ const translations = {
       title: "เส้นทางยอดนิยม",
       subtitle: "เลือกเส้นทางและเพลิดเพลินกับการเดินทางที่สะดวกสบาย",
       routes: [
-        { name: "กรุงเทพ → พัทยา", price: "เริ่มต้น ฿1,500", desc: "บริการรับส่งส่วนตัวจากทุกที่ในกรุงเทพไปโรงแรมในพัทยา ใช้เวลาประมาณ 1.5-2 ชั่วโมง", icon: "car" },
-        { name: "พัทยา → กรุงเทพ", price: "เริ่มต้น ฿1,500", desc: "บริการรับส่งกลับจากพัทยาไปกรุงเทพ สะดวกและเชื่อถือได้", icon: "car" },
-        { name: "สนามบินสุวรรณภูมิ → พัทยา", price: "เริ่มต้น ฿1,500", desc: "พบคนขับที่ห้องรับผู้โดยสาร พร้อมป้ายชื่อและช่วยขนกระเป๋า", icon: "plane" },
-        { name: "สนามบินดอนเมือง → พัทยา", price: "เริ่มต้น ฿1,500", desc: "รับจากสนามบินดอนเมือง พร้อมติดตามเที่ยวบินและเวลารอฟรี", icon: "plane" },
+        { name: "กรุงเทพ → พัทยา", price: "เริ่มต้น ฿1,200", desc: "บริการรับส่งส่วนตัวจากทุกที่ในกรุงเทพไปโรงแรมในพัทยา ใช้เวลาประมาณ 1.5-2 ชั่วโมง", icon: "car" },
+        { name: "พัทยา → กรุงเทพ", price: "เริ่มต้น ฿1,200", desc: "บริการรับส่งกลับจากพัทยาไปกรุงเทพ สะดวกและเชื่อถือได้", icon: "car" },
+        { name: "สนามบินสุวรรณภูมิ → พัทยา", price: "เริ่มต้น ฿1,100", desc: "พบคนขับที่ห้องรับผู้โดยสาร พร้อมป้ายชื่อและช่วยขนกระเป๋า", icon: "plane" },
+        { name: "สนามบินดอนเมือง → พัทยา", price: "เริ่มต้น ฿1,300", desc: "รับจากสนามบินดอนเมือง พร้อมติดตามเที่ยวบินและเวลารอฟรี", icon: "plane" },
       ],
     },
     whyUs: {
