@@ -3,6 +3,8 @@
 > High-conversion SEO landing page & booking system for a private taxi service in Thailand.
 >
 > 🌐 **Live Demo:** [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/)
+>
+> 🇹🇭 [อ่านเป็นภาษาไทย (Thai Version)](./README.th.md)
 
 ![Build](https://img.shields.io/badge/Build-Passing-4CAF50?style=flat-square)
 ![Tech](https://img.shields.io/badge/TypeScript-93.8%25-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -10,6 +12,21 @@
 ![Backend](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
 ![Database](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+---
+
+## 📸 Screenshots & UI Design
+The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne Gold** theme to maximize conversion and trust.
+
+| Hero Section | Booking Wizard |
+| :---: | :---: |
+| <img src="https://placehold.co/600x400/020817/D5B563?text=Hero+Section+Screenshot" width="100%"> | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
+
+| Why Choose Us (Bento Grid Layout) |
+| :---: |
+| <img src="https://placehold.co/800x400/020817/D5B563?text=Bento+Grid+UI+Screenshot" width="100%"> |
+
+*(Note: Replace the placeholder images with actual UI screenshots when available)*
 
 ---
 
