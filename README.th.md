@@ -20,7 +20,7 @@
 
 | Hero Section (หน้าแรก) | Booking Wizard (ฟอร์มการจอง) |
 | :---: | :---: |
-| <img src="./docs/screenshot-hero.png" width="100%"> | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
+| ![Hero Section](./docs/screenshot-hero.png) | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
 
 | Why Choose Us (Bento Grid Layout) |
 | :---: |
