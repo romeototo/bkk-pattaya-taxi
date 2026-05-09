@@ -140,11 +140,11 @@ export function BookingSection() {
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.date}</label>
-                        <Input type="date" value={formData.travelDate} onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })} min={new Date().toISOString().split("T")[0]} className="bg-background/50 border-border" required />
+                        <Input type="date" value={formData.travelDate} onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })} min={new Date().toISOString().split("T")[0]} className="bg-background/50 border-border text-foreground [color-scheme:dark]" required />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.time}</label>
-                        <Input type="time" value={formData.travelTime} onChange={(e) => setFormData({ ...formData, travelTime: e.target.value })} className="bg-background/50 border-border" required />
+                        <Input type="time" value={formData.travelTime} onChange={(e) => setFormData({ ...formData, travelTime: e.target.value })} className="bg-background/50 border-border text-foreground [color-scheme:dark]" required />
                       </div>
                     </div>
                     {isAirportPickup && (
