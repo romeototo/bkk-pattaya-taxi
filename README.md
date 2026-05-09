@@ -20,7 +20,7 @@ The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne
 
 | Hero Section | Booking Wizard |
 | :---: | :---: |
-| <img src="https://placehold.co/600x400/020817/D5B563?text=Hero+Section+Screenshot" width="100%"> | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
+| <img src="./docs/screenshot-hero.png" width="100%"> | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
 
 | Why Choose Us (Bento Grid Layout) |
 | :---: |
