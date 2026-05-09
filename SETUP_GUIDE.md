@@ -51,6 +51,8 @@ The application will be available at `http://localhost:3000`
 
 Booking form submissions are sent to the backend first. The backend sends lead details to Telegram using `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. A static GitHub Pages deployment alone cannot send Telegram messages because it does not run the server.
 
+Decision: keep GitHub Pages for the static marketing page and run the Node backend separately. In production, set `VITE_TRPC_URL` during the frontend build to the public backend endpoint, for example `https://your-backend.example.com/api/trpc`.
+
 ---
 
 ## Google Sheets Integration

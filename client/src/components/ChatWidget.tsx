@@ -29,8 +29,14 @@ const SUGGESTED_PROMPTS_TH = [
   "จองพรุ่งนี้ได้ไหม?",
 ];
 
-export function ChatWidget({ lang = "en" }: { lang?: "en" | "th" }) {
-  const [isOpen, setIsOpen] = useState(false);
+export function ChatWidget({
+  lang = "en",
+  defaultOpen = false,
+}: {
+  lang?: "en" | "th";
+  defaultOpen?: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);

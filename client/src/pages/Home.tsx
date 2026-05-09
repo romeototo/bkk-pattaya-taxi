@@ -1,6 +1,5 @@
-import { useState, useMemo } from "react";
+import { lazy, Suspense, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ChatWidget } from "@/components/ChatWidget";
 import { LocationSelect } from "@/components/LocationSelect";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,9 +11,13 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   Car, Phone, MessageCircle, MapPin, Clock, Shield, Star, Users,
-  Luggage, ChevronDown, ArrowRight, CheckCircle, Globe, Plane,
+  Luggage, ChevronDown, ArrowRight, CheckCircle, Plane,
   Navigation, Award, Headphones, CreditCard, Menu, X
 } from "lucide-react";
+
+const ChatWidget = lazy(() =>
+  import("@/components/ChatWidget").then((module) => ({ default: module.ChatWidget }))
+);
 
 // CDN Image URLs
 const IMAGES = {
@@ -67,7 +70,7 @@ const translations = {
     },
     reviews: {
       title: "What Our Customers Say",
-      subtitle: "Trusted by thousands of international travelers",
+      subtitle: "Recent customer notes from private transfer bookings",
       items: [
         { name: "James Wilson", country: "United Kingdom", text: "Excellent service! Driver was punctual and very professional. The car was clean and comfortable. Highly recommend for anyone traveling from Bangkok to Pattaya.", rating: 5 },
         { name: "Sarah Johnson", country: "United States", text: "Best transfer service in Thailand! Fixed price, no hassle. The driver was waiting at the airport with my name sign. Very smooth experience.", rating: 5 },
@@ -91,7 +94,7 @@ const translations = {
       luggage: "Luggage",
       contactMethod: "Preferred Contact Method",
       notes: "Special Requests or Notes",
-      submit: "Send Booking via WhatsApp",
+      submit: "Send Booking Request",
       success: "Opening WhatsApp with your booking details...",
     },
     gallery: {
@@ -124,7 +127,7 @@ const translations = {
       contactInfo: "Contact Info",
       serviceAreas: "Service Areas",
       areas: ["Bangkok City Center", "Suvarnabhumi Airport (BKK)", "Don Mueang Airport (DMK)", "Pattaya", "Jomtien Beach", "Walking Street Pattaya"],
-      copyright: `© ${new Date().getFullYear()} BKK Pattaya Private Taxi. All rights reserved.`,
+      copyright: `Copyright ${new Date().getFullYear()} BKK Pattaya Private Taxi. All rights reserved.`,
     },
   },
   th: {
@@ -246,8 +249,9 @@ const stagger = {
 };
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("en");
+  const lang: Lang = "en";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isChatRequested, setIsChatRequested] = useState(false);
   const t = translations[lang];
 
   // Booking form state
@@ -259,6 +263,7 @@ export default function Home() {
     dropoffLocation: "",
     travelDate: "",
     travelTime: "",
+    flightNumber: "",
     passengers: "2",
     luggage: "2",
     preferredContactMethod: "whatsapp",
@@ -267,25 +272,29 @@ export default function Home() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createBookingMutation = trpc.booking.create.useMutation();
+  const isAirportPickup = /airport|\bBKK\b|\bDMK\b|\bUTP\b/i.test(formData.pickupLocation);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const bookingNotes = [
+      formData.flightNumber ? `Flight number: ${formData.flightNumber}` : "",
+      formData.notes,
+    ].filter(Boolean).join("\n");
 
     const msg = encodeURIComponent(
       `Hello! I'd like to book a transfer:\n\n` +
-      `👤 Name: ${formData.fullName}\n` +
-      `📞 Phone: ${formData.phone}\n` +
-      `📧 Email: ${formData.email}\n` +
-      `📍 From: ${formData.pickupLocation}\n` +
-      `📍 To: ${formData.dropoffLocation}\n` +
-      `📅 Date: ${formData.travelDate}\n` +
-      `🕐 Time: ${formData.travelTime}\n` +
-      `👥 Passengers: ${formData.passengers}\n` +
-      `🧳 Luggage: ${formData.luggage}\n` +
-      `${formData.notes ? `📝 Notes: ${formData.notes}` : ""}`
+      `Name: ${formData.fullName}\n` +
+      `Phone: ${formData.phone}\n` +
+      `Email: ${formData.email}\n` +
+      `From: ${formData.pickupLocation}\n` +
+      `To: ${formData.dropoffLocation}\n` +
+      `Date: ${formData.travelDate}\n` +
+      `Time: ${formData.travelTime}\n` +
+      `Passengers: ${formData.passengers}\n` +
+      `Luggage: ${formData.luggage}\n` +
+      `${bookingNotes ? `Notes: ${bookingNotes}` : ""}`
     );
-
     try {
       const result = await createBookingMutation.mutateAsync({
         fullName: formData.fullName,
@@ -298,7 +307,7 @@ export default function Home() {
         passengers: Number(formData.passengers),
         luggage: Number(formData.luggage),
         preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
-        notes: formData.notes || undefined,
+        notes: bookingNotes || undefined,
       });
 
       if (result.telegramSent) {
@@ -322,6 +331,7 @@ export default function Home() {
       dropoffLocation: "",
       travelDate: "",
       travelTime: "",
+      flightNumber: "",
       passengers: "2",
       luggage: "2",
       preferredContactMethod: "whatsapp",
@@ -377,15 +387,6 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Language toggle */}
-            <button
-              onClick={() => setLang(lang === "en" ? "th" : "en")}
-              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded-md border border-border"
-            >
-              <Globe className="w-4 h-4" />
-              {lang === "en" ? "TH" : "EN"}
-            </button>
-
             <Button
               onClick={() => scrollTo("booking")}
               className="hidden sm:flex bg-primary text-primary-foreground hover:bg-primary/90"
@@ -620,7 +621,7 @@ export default function Home() {
             variants={stagger}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {t.reviews.items.map((review, i) => (
+            {t.reviews.items.slice(0, 3).map((review, i) => (
               <motion.div key={i} variants={fadeInUp}>
                 <Card className="glass-card hover:border-primary/40 transition-all duration-300 h-full">
                   <CardContent className="p-6">
@@ -722,6 +723,17 @@ export default function Home() {
                   </div>
 
 
+                  {isAirportPickup && (
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">Flight number</label>
+                      <Input
+                        placeholder="e.g., TG 910"
+                        value={formData.flightNumber}
+                        onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value })}
+                        className="bg-input border-border"
+                      />
+                    </div>
+                  )}
 
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
@@ -803,6 +815,15 @@ export default function Home() {
                   </div>
 
 
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.notes}</label>
+                    <Textarea
+                      placeholder="Child seat, hotel room name, arrival details, or any special request"
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      className="bg-input border-border min-h-24"
+                    />
+                  </div>
 
                   <Button
                     type="submit"
@@ -942,7 +963,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
           >
-            <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+            <div className="grid gap-12 items-center max-w-3xl mx-auto">
               {/* Left Column - Contact Cards */}
               <motion.div variants={fadeInUp} className="space-y-6">
                 <div>
@@ -1017,6 +1038,7 @@ export default function Home() {
               </motion.div>
 
               {/* Right Column - QR Codes */}
+              {false && (
               <motion.div variants={fadeInUp} className="flex flex-col items-center justify-center space-y-6">
                 {/* WhatsApp QR Code */}
                 <div className="glass-card rounded-2xl p-8 w-full max-w-sm">
@@ -1052,6 +1074,7 @@ export default function Home() {
                   </p>
                 </div>
               </motion.div>
+              )}
             </div>
           </motion.div>
         </div>
@@ -1128,7 +1151,20 @@ export default function Home() {
       </footer>
 
       {/* AI Chat Widget */}
-      <ChatWidget lang={lang} />
+      {isChatRequested ? (
+        <Suspense fallback={null}>
+          <ChatWidget lang={lang} defaultOpen />
+        </Suspense>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setIsChatRequested(true)}
+          className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-primary hover:bg-primary/90 rounded-full flex items-center justify-center shadow-lg shadow-primary/25 transition-all hover:scale-110"
+          aria-label="Open booking chat"
+        >
+          <MessageCircle className="w-6 h-6 text-primary-foreground" />
+        </button>
+      )}
 
       {/* Floating WhatsApp Button */}
       <a

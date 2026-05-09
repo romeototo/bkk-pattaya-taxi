@@ -97,7 +97,7 @@ pnpm dev
 
 The app will be available at `http://localhost:3000`
 
-For Telegram booking alerts, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env`. The backend must be running for form submissions to reach Telegram; GitHub Pages alone only serves the static frontend.
+For Telegram booking alerts, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env`. The backend must be running for form submissions to reach Telegram; GitHub Pages alone only serves the static frontend. If the frontend is deployed on GitHub Pages and the backend is hosted elsewhere, set `VITE_TRPC_URL` to the backend URL, for example `https://your-backend.example.com/api/trpc`.
 
 See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed configuration of all notification channels.
 
