@@ -1,8 +1,0 @@
-{
-  "query": "INSERT INTO bookings (fullName, phone, email, pickupLocation, dropoffLocation, travelDate, travelTime, passengers, luggage, preferredContactMethod, notes, status) VALUES ('Dusit Suriwan', '+66829824986', 'dusit@example.com', 'Bangkok Airport', 'Pattaya Hotel', '2026-03-15', '14:00', 2, 2, 'whatsapp', 'Test booking', 'pending');",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user wxU1YTsgnHzSjKE.root --database 7JGRSFRRiiGdqokZA4QqP6 --execute INSERT INTO bookings (fullName, phone, email, pickupLocation, dropoffLocation, travelDate, travelTime, passengers, luggage, preferredContactMethod, notes, status) VALUES ('Dusit Suriwan', '+66829824986', 'dusit@example.com', 'Bangkok Airport', 'Pattaya Hotel', '2026-03-15', '14:00', 2, 2, 'whatsapp', 'Test booking', 'pending');",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'fullName' in 'field list'"
-  ]
-}

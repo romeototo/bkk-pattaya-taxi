@@ -1,0 +1,98 @@
+import type { Translations } from "./types";
+import { PRICING, formatPrice } from "../config/pricing";
+
+export const en: Translations = {
+  nav: { services: "Services", whyUs: "Why Us", reviews: "Reviews", gallery: "Gallery", faq: "FAQ", contact: "Contact", bookNow: "Book Now" },
+  hero: {
+    badge: "Premium Private Transfer Service",
+    h1: "Bangkok to Pattaya Taxi",
+    h1span: "Private Transfer Service",
+    subtitle: "Experience the comfort of a private transfer from Bangkok to Pattaya with fixed pricing, professional English-speaking drivers, and door-to-door service.",
+    bookNow: "Book Now",
+    whatsapp: "Chat on WhatsApp",
+    features: ["Private Car Only", "Fixed Price", "Airport Pickup", "English Speaking Driver"],
+  },
+  services: {
+    title: "Popular Routes",
+    subtitle: "Choose your route and enjoy a comfortable private transfer",
+    routes: [
+      { name: "Bangkok → Pattaya", price: `From ${formatPrice(PRICING.bkkToPattaya)}`, desc: "Door-to-door private transfer from any location in Bangkok to your hotel in Pattaya. Approximately 1.5-2 hours.", icon: "car" },
+      { name: "Pattaya → Bangkok", price: `From ${formatPrice(PRICING.pattayaToBkk)}`, desc: "Return transfer from Pattaya to Bangkok city center, hotel, or any location. Comfortable and reliable.", icon: "car" },
+      { name: "Suvarnabhumi Airport → Pattaya", price: `From ${formatPrice(PRICING.suvarnabhumiToPattaya)}`, desc: "Meet & greet at arrival hall. Your driver will hold a name sign and assist with luggage.", icon: "plane" },
+      { name: "Don Mueang Airport → Pattaya", price: `From ${formatPrice(PRICING.donMueangToPattaya)}`, desc: "Pickup from Don Mueang International Airport with flight monitoring and free waiting time.", icon: "plane" },
+    ],
+  },
+  whyUs: {
+    title: "Why Choose Us",
+    subtitle: "We provide premium private transfer service trusted by thousands of international travelers",
+    items: [
+      { title: "Fixed Price Guarantee", desc: "No hidden charges, no surge pricing. The price you see is the price you pay, including tolls and fuel.", icon: "creditcard" },
+      { title: "Professional Drivers", desc: "All our drivers are licensed, experienced, and English-speaking. Your safety and comfort are our priority.", icon: "award" },
+      { title: "24/7 Service", desc: "Available around the clock for early morning flights, late night arrivals, or any time you need us.", icon: "headphones" },
+      { title: "Private Transfer Only", desc: "No ride sharing. Your car is exclusively for you and your group. Enjoy privacy and comfort.", icon: "shield" },
+      { title: "Airport Meet & Greet", desc: "Our driver meets you at the arrival hall with a name sign. Free waiting time for flight delays.", icon: "plane" },
+      { title: "Easy Booking", desc: "Book instantly via WhatsApp or LINE. Quick confirmation and flexible cancellation policy.", icon: "messagecircle" },
+    ],
+  },
+  reviews: {
+    title: "What Our Customers Say",
+    subtitle: "Recent customer notes from private transfer bookings",
+    items: [
+      { name: "James Wilson", country: "United Kingdom", text: "Excellent service! Driver was punctual and very professional. The car was clean and comfortable. Highly recommend for anyone traveling from Bangkok to Pattaya.", rating: 5 },
+      { name: "Sarah Johnson", country: "United States", text: "Best transfer service in Thailand! Fixed price, no hassle. The driver was waiting at the airport with my name sign. Very smooth experience.", rating: 5 },
+      { name: "Hans Mueller", country: "Germany", text: "We used this service for our family trip. The van was spacious and the driver was very helpful with our luggage. Great value for money.", rating: 5 },
+      { name: "Yuki Tanaka", country: "Japan", text: "Very reliable and comfortable. The driver spoke good English and was very friendly. Will definitely use again on my next trip to Thailand.", rating: 5 },
+      { name: "Pierre Dubois", country: "France", text: "Booked via WhatsApp and got instant confirmation. The car was waiting for us at the hotel lobby. Smooth ride to Pattaya. Merci!", rating: 5 },
+      { name: "Emma Chen", country: "Australia", text: "Used this service twice during our Thailand holiday. Both times were perfect. Clean car, safe driving, and very reasonable price.", rating: 5 },
+    ],
+  },
+  booking: {
+    title: "Book Your Transfer",
+    subtitle: "Fill in the form below and we will confirm your booking within minutes",
+    pickup: "Pickup Location",
+    dropoff: "Drop-off Location",
+    date: "Date",
+    time: "Time",
+    fullName: "Full Name",
+    email: "Email",
+    phone: "Phone / WhatsApp",
+    passengers: "Number of Passengers",
+    luggage: "Luggage",
+    contactMethod: "Preferred Contact Method",
+    notes: "Special Requests or Notes",
+    submit: "Send Booking Request",
+    success: "Opening WhatsApp with your booking details...",
+  },
+  gallery: {
+    title: "Our Fleet & Destinations",
+    subtitle: "Premium vehicles and beautiful destinations await you",
+  },
+  faq: {
+    title: "Frequently Asked Questions",
+    subtitle: "Everything you need to know about our service",
+    items: [
+      { q: "Is the price fixed?", a: "Yes, we offer fixed pricing with no hidden charges. The price you see is the price you pay, including highway tolls and fuel. No surge pricing, no surprises." },
+      { q: "Can I book airport pickup?", a: "Yes, we provide airport pickup service from both Suvarnabhumi (BKK) and Don Mueang (DMK) airports. Our driver will meet you at the arrival hall with a name sign and assist with your luggage." },
+      { q: "How long is the trip from Bangkok to Pattaya?", a: "The trip typically takes 1.5 to 2 hours depending on traffic conditions. From Suvarnabhumi Airport, it takes approximately 1.5 hours via the motorway." },
+      { q: "Can I bring luggage?", a: "Yes, our vehicles have spacious luggage compartments. Standard sedans can accommodate 2-3 large suitcases, and our vans can handle up to 8 large suitcases." },
+      { q: "What payment methods do you accept?", a: "We accept cash (Thai Baht), bank transfer, and can arrange other payment methods upon request. Payment is made directly to the driver or in advance via bank transfer." },
+      { q: "Can I cancel or change my booking?", a: "Yes, free cancellation or changes up to 12 hours before pickup time. Please contact us via WhatsApp or LINE to make changes." },
+    ],
+  },
+  contact: {
+    title: "Get In Touch",
+    subtitle: "Ready to book? Contact us through your preferred channel",
+    whatsapp: "Chat on WhatsApp",
+    line: "Add us on LINE",
+    phone: "Call Us",
+    lineId: "LINE ID: suriwandusit",
+  },
+  footer: {
+    desc: "Premium private taxi transfer service between Bangkok and Pattaya. Fixed price, professional drivers, and comfortable vehicles for international travelers.",
+    quickLinks: "Quick Links",
+    contactInfo: "Contact Info",
+    serviceAreas: "Service Areas",
+    areas: ["Bangkok City Center", "Suvarnabhumi Airport (BKK)", "Don Mueang Airport (DMK)", "Pattaya", "Jomtien Beach", "Walking Street Pattaya"],
+    copyright: `Copyright ${new Date().getFullYear()} BKK Pattaya Private Taxi. All rights reserved.`,
+  },
+};

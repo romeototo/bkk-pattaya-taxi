@@ -1,0 +1,296 @@
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LocationSelect } from "@/components/LocationSelect";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { WHATSAPP_URL, fadeInUp, stagger } from "@/config/constants";
+import { pricing } from "@/config/pricing";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { ArrowRight, MapPin, Calendar, Clock, Car, CheckCircle2 } from "lucide-react";
+
+export function BookingSection() {
+  const { t } = useLanguage();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    pickupLocation: "",
+    dropoffLocation: "",
+    travelDate: "",
+    travelTime: "",
+    flightNumber: "",
+    passengers: "2",
+    luggage: "2",
+    preferredContactMethod: "whatsapp",
+    notes: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createBookingMutation = trpc.booking.create.useMutation();
+  const isAirportPickup = /airport|\bBKK\b|\bDMK\b|\bUTP\b/i.test(formData.pickupLocation);
+
+  // Dynamic price calculation
+  const calculatedPrice = useMemo(() => {
+    // Default fallback
+    if (!formData.pickupLocation || !formData.dropoffLocation) return "฿1,500";
+    
+    // Simple mock logic for demonstration. In a real app, you'd match exact routes.
+    const isBKK = formData.pickupLocation.includes("BKK") || formData.pickupLocation.includes("Suvarnabhumi");
+    const isPattaya = formData.dropoffLocation.includes("Pattaya");
+    
+    if (isBKK && isPattaya) return "฿1,500";
+    if (formData.pickupLocation.includes("DMK")) return "฿1,800";
+    if (formData.pickupLocation.includes("Hua Hin")) return "฿2,500";
+    
+    return "฿1,500+"; // Baseline
+  }, [formData.pickupLocation, formData.dropoffLocation]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const bookingNotes = [
+      formData.flightNumber ? `Flight number: ${formData.flightNumber}` : "",
+      formData.notes,
+    ].filter(Boolean).join("\n");
+
+    const msg = encodeURIComponent(
+      `Hello! I'd like to book a transfer:\n\n` +
+      `Name: ${formData.fullName}\n` +
+      `Phone: ${formData.phone}\n` +
+      `Email: ${formData.email}\n` +
+      `From: ${formData.pickupLocation}\n` +
+      `To: ${formData.dropoffLocation}\n` +
+      `Date: ${formData.travelDate}\n` +
+      `Time: ${formData.travelTime}\n` +
+      `Passengers: ${formData.passengers}\n` +
+      `Luggage: ${formData.luggage}\n` +
+      `${bookingNotes ? `Notes: ${bookingNotes}` : ""}`
+    );
+
+    // Best-effort: try backend if available, always open WhatsApp
+    try {
+      await createBookingMutation.mutateAsync({
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        pickupLocation: formData.pickupLocation,
+        dropoffLocation: formData.dropoffLocation,
+        travelDate: formData.travelDate,
+        travelTime: formData.travelTime,
+        passengers: Number(formData.passengers),
+        luggage: Number(formData.luggage),
+        preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
+        notes: bookingNotes || undefined,
+      });
+    } catch {
+      // Backend unavailable — silently proceed to WhatsApp
+    }
+
+    toast.success(t.booking.success);
+    window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
+
+    setIsSubmitting(false);
+  };
+
+  return (
+    <section id="booking" className="py-20 lg:py-28 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+      <div className="container relative">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={stagger} className="text-center mb-16">
+          <motion.h2 variants={fadeInUp} className="text-3xl lg:text-4xl font-serif font-bold mb-4">{t.booking.title}</motion.h2>
+          <motion.p variants={fadeInUp} className="text-muted-foreground max-w-2xl mx-auto">{t.booking.subtitle}</motion.p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Form */}
+          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-8">
+            <Card className="glass-card shadow-xl border-primary/10">
+              <CardContent className="p-6 lg:p-8">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  
+                  {/* Route Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-primary" /> Route Details
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup}</label>
+                        <LocationSelect value={formData.pickupLocation} onChange={(val) => setFormData({ ...formData, pickupLocation: val })} placeholder="e.g., Suvarnabhumi Airport" className="bg-background/50 border-border" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff}</label>
+                        <LocationSelect value={formData.dropoffLocation} onChange={(val) => setFormData({ ...formData, dropoffLocation: val })} placeholder="e.g., Hilton Pattaya" className="bg-background/50 border-border" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Travel Schedule */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-primary" /> Schedule & Vehicle
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.date}</label>
+                        <Input type="date" value={formData.travelDate} onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })} min={new Date().toISOString().split("T")[0]} className="bg-background/50 border-border" required />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.time}</label>
+                        <Input type="time" value={formData.travelTime} onChange={(e) => setFormData({ ...formData, travelTime: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                    </div>
+                    {isAirportPickup && (
+                      <div className="animate-in fade-in slide-in-from-top-2">
+                        <label className="text-sm font-medium text-foreground mb-2 block">Flight number (For Airport Pickup)</label>
+                        <Input placeholder="e.g., TG 910" value={formData.flightNumber} onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value })} className="bg-background/50 border-border" />
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                      <div className="col-span-2 md:col-span-2">
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.passengers}</label>
+                        <Input type="number" min="1" max="15" value={formData.passengers} onChange={(e) => setFormData({ ...formData, passengers: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                      <div className="col-span-2 md:col-span-2">
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.luggage}</label>
+                        <Input type="number" min="0" max="20" value={formData.luggage} onChange={(e) => setFormData({ ...formData, luggage: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contact Details */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" /> Contact Details
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.fullName}</label>
+                        <Input placeholder="Your full name" value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.email}</label>
+                        <Input type="email" placeholder="your.email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.phone}</label>
+                        <Input placeholder="+66 82 982 4986" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="bg-background/50 border-border" required />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.contactMethod}</label>
+                        <Select value={formData.preferredContactMethod} onValueChange={(val) => setFormData({ ...formData, preferredContactMethod: val as any })}>
+                          <SelectTrigger className="bg-background/50 border-border"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                            <SelectItem value="line">LINE</SelectItem>
+                            <SelectItem value="email">Email</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Notes */}
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.notes}</label>
+                    <Textarea placeholder="Child seat, hotel room name, or any special request" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="bg-background/50 border-border min-h-20" />
+                  </div>
+
+                  {/* Mobile Submit Button (hidden on desktop, summary card takes over) */}
+                  <div className="lg:hidden mt-6">
+                    <Button type="submit" size="lg" className="w-full bg-whatsapp hover:opacity-90 text-white text-base py-6 shadow-lg shadow-green-500/25" disabled={isSubmitting}>
+                      {isSubmitting ? "Processing..." : "Confirm Booking via WhatsApp"}
+                      {!isSubmitting && <ArrowRight className="w-5 h-5 ml-2" />}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Right Column: Booking Summary Card */}
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-4 sticky top-24">
+            <Card className="glass-card shadow-2xl border-primary/20 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+              <CardHeader className="bg-primary/5 border-b border-border/50 pb-4">
+                <CardTitle className="font-serif text-xl flex items-center gap-2">
+                  Booking Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                
+                {/* Details List */}
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="text-muted-foreground whitespace-nowrap">Route</span>
+                    <span className="font-medium text-right">
+                      {formData.pickupLocation || "---"} <br/>
+                      <span className="text-muted-foreground text-xs">to</span> <br/>
+                      {formData.dropoffLocation || "---"}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-muted-foreground">Date & Time</span>
+                    <span className="font-medium">
+                      {formData.travelDate ? `${formData.travelDate}` : "---"}
+                      {formData.travelTime ? `, ${formData.travelTime}` : ""}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center gap-4">
+                    <span className="text-muted-foreground">Passengers</span>
+                    <span className="font-medium">{formData.passengers} Pax</span>
+                  </div>
+                </div>
+
+                <div className="h-px bg-border/50 my-4" />
+
+                {/* Price Display */}
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Estimated Total</p>
+                  <div className="flex items-end gap-2">
+                    <span className="text-3xl font-bold text-primary">{calculatedPrice}</span>
+                    <span className="text-sm text-muted-foreground mb-1 pb-1 text-decoration-line-through opacity-60">฿2,000</span>
+                  </div>
+                  <p className="text-xs gradient-gold-text mt-2 font-medium flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-[oklch(0.85_0.12_85)]" /> Fixed Price Guarantee
+                  </p>
+                </div>
+
+                <Button 
+                  onClick={handleSubmit} 
+                  size="lg" 
+                  className="w-full bg-whatsapp hover:opacity-90 text-white text-base py-6 mt-4 shadow-xl shadow-green-500/30 group border-0" 
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      Processing...
+                    </span>
+                  ) : (
+                    <>Book via WhatsApp <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
+                  )}
+                </Button>
+                
+                <p className="text-xs text-center text-muted-foreground">
+                  No credit card required. Pay to driver directly.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

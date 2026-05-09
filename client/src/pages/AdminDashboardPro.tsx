@@ -58,10 +58,10 @@ interface Booking {
 }
 
 const statusColors: Record<BookingStatus, string> = {
-  pending: "bg-yellow-100 text-yellow-800",
-  confirmed: "bg-blue-100 text-blue-800",
-  completed: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
+  pending: "bg-yellow-900/30 text-yellow-400 border border-yellow-800/30",
+  confirmed: "bg-blue-900/30 text-blue-400 border border-blue-800/30",
+  completed: "bg-green-900/30 text-green-400 border border-green-800/30",
+  cancelled: "bg-red-900/30 text-red-400 border border-red-800/30",
 };
 
 export default function AdminDashboardPro() {
@@ -456,16 +456,7 @@ export default function AdminDashboardPro() {
                 </div>
               </div>
 
-              {/* Delete Button */}
-              <div className="flex justify-end">
-                <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeleteBooking(selectedBooking.id)}
-                  >
-                    Delete Booking
-                  </Button>
-              </div>
+
             </div>
           )}
         </DialogContent>

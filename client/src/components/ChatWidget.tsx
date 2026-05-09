@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, X, Send, Loader2, Sparkles, User, Bot, Minimize2
 } from "lucide-react";
-import { Streamdown } from "streamdown";
+
 
 type ChatMessage = {
   role: "user" | "assistant";
