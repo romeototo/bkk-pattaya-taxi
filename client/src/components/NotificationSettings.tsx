@@ -30,7 +30,6 @@ export function NotificationSettings() {
     }
     try {
       await updateAdminChannels.mutateAsync({
-        userId: user.id,
         lineToken: lineToken || undefined,
         emailEnabled,
         telegramChatId: telegramChatId || undefined,
@@ -48,7 +47,6 @@ export function NotificationSettings() {
     }
     try {
       await updateUserPreferences.mutateAsync({
-        userId: user.id,
         emailNotifications,
         notifyOnConfirmed,
         notifyOnCompleted,

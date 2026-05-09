@@ -1,6 +1,33 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+
+vi.mock("./db", () => ({
+  createBooking: vi.fn(),
+  getBookings: vi.fn(),
+  getBookingById: vi.fn(),
+  updateBookingStatus: vi.fn(),
+  getBookingStats: vi.fn(),
+  searchBookings: vi.fn(),
+  getNotificationSettings: vi.fn().mockResolvedValue(null),
+  updateAdminNotificationChannels: vi.fn().mockResolvedValue({
+    id: 1,
+    userId: 1,
+    adminLineToken: "test-line-token",
+    adminEmailEnabled: "true",
+    adminTelegramChatId: "123456789",
+  }),
+  updateUserNotificationPreferences: vi.fn().mockImplementation((_userId, prefs) => Promise.resolve({
+    id: 2,
+    userId: 2,
+    userEmailNotifications: prefs.emailNotifications === false ? "false" : "true",
+    notifyOnConfirmed: prefs.notifyOnConfirmed === false ? "false" : "true",
+    notifyOnCompleted: prefs.notifyOnCompleted === false ? "false" : "true",
+    notifyOnCancelled: prefs.notifyOnCancelled === false ? "false" : "true",
+  })),
+  verifyAdminPassword: vi.fn(),
+  sendTelegramNotification: vi.fn(),
+}));
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
@@ -86,9 +113,8 @@ describe("Notification Settings", () => {
       telegramChatId: "123456789",
     });
 
-    expect(result.success).toBe(true);
-    expect(result.settings).toBeDefined();
-    expect(result.settings?.adminLineToken).toBe("test-line-token");
+    expect(result).toBeDefined();
+    expect(result?.adminLineToken).toBe("test-line-token");
   });
 
   it("should throw error if non-admin tries to update admin channels", async () => {
@@ -118,10 +144,9 @@ describe("Notification Settings", () => {
       scheduledMinutesBefore: 60,
     });
 
-    expect(result.success).toBe(true);
-    expect(result.settings).toBeDefined();
-    expect(result.settings?.userEmailNotifications).toBe("true");
-    expect(result.settings?.notifyOnCompleted).toBe("false");
+    expect(result).toBeDefined();
+    expect(result?.userEmailNotifications).toBe("true");
+    expect(result?.notifyOnCompleted).toBe("false");
   });
 
   it("should throw error if unauthenticated user tries to update preferences", async () => {
@@ -150,7 +175,6 @@ describe("Notification Settings", () => {
       emailNotifications: false,
     });
 
-    expect(result.success).toBe(true);
-    expect(result.settings?.userEmailNotifications).toBe("false");
+    expect(result?.userEmailNotifications).toBe("false");
   });
 });

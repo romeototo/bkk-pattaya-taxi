@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
@@ -265,8 +266,9 @@ export default function Home() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const createBookingMutation = trpc.booking.create.useMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -284,7 +286,31 @@ export default function Home() {
       `${formData.notes ? `📝 Notes: ${formData.notes}` : ""}`
     );
 
-    toast.success(t.booking.success);
+    try {
+      const result = await createBookingMutation.mutateAsync({
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        pickupLocation: formData.pickupLocation,
+        dropoffLocation: formData.dropoffLocation,
+        travelDate: formData.travelDate,
+        travelTime: formData.travelTime,
+        passengers: Number(formData.passengers),
+        luggage: Number(formData.luggage),
+        preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
+        notes: formData.notes || undefined,
+      });
+
+      if (result.telegramSent) {
+        toast.success("Booking sent to Telegram. Opening WhatsApp with a copy...");
+      } else {
+        toast.warning("Booking received, but Telegram was not confirmed. Opening WhatsApp with a copy...");
+      }
+    } catch (error) {
+      console.error("[Booking] Failed to submit booking", error);
+      toast.error("Could not send through the system. Opening WhatsApp fallback.");
+    }
+
     window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
 
     // Reset form

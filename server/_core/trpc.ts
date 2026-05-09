@@ -1,6 +1,7 @@
 import { NOT_ADMIN_ERR_MSG, UNAUTHED_ERR_MSG } from '@shared/const';
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { verifyAdminSessionCookie } from "./adminSession";
 import type { TrpcContext } from "./context";
 
 const t = initTRPC.context<TrpcContext>().create({
@@ -47,19 +48,10 @@ export const adminProcedure = t.procedure.use(
 export const adminSessionProcedure = t.procedure.use(
   t.middleware(async opts => {
     const { ctx, next } = opts;
-    const adminSession = ctx.req.cookies?.admin_session;
+    const adminSession = verifyAdminSessionCookie(ctx.req.cookies?.admin_session);
 
     if (!adminSession) {
       throw new TRPCError({ code: "UNAUTHORIZED", message: "Admin session not found" });
-    }
-
-    try {
-      const session = JSON.parse(adminSession);
-      if (!session.authenticated) {
-        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid admin session" });
-      }
-    } catch (error) {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid admin session" });
     }
 
     return next({

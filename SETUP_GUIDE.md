@@ -34,14 +34,22 @@ cd bkk-pattaya-taxi
 # Install dependencies
 pnpm install
 
-# Set up the database
+# Copy environment template and fill in real values
+copy .env.example .env
+
+# Set up the database tables
 pnpm db:push
+
+# Create the first admin account
+pnpm admin:create -- --username admin --email owner@example.com --password "change-this-password"
 
 # Start the development server
 pnpm dev
 ```
 
 The application will be available at `http://localhost:3000`
+
+Booking form submissions are sent to the backend first. The backend sends lead details to Telegram using `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. A static GitHub Pages deployment alone cannot send Telegram messages because it does not run the server.
 
 ---
 
@@ -138,7 +146,30 @@ In the Manus Management UI (Settings → Secrets):
 
 ### Testing Telegram
 
-Send a test message to your bot. You should receive a notification in the chat where you configured the bot.
+1. Start the backend with `pnpm dev`
+2. Submit the booking form on the homepage
+3. Confirm the booking details arrive in the configured Telegram chat
+
+The form still opens WhatsApp as a customer-facing copy/fallback, but Telegram is sent by the backend.
+
+---
+
+## Admin Account Setup
+
+Admin login uses hashed credentials stored in the `adminCredentials` table. There is no built-in default password.
+
+Create the first admin after `pnpm db:push`:
+
+```bash
+pnpm admin:create -- --username admin --email owner@example.com --password "use-a-strong-password"
+```
+
+Required environment variables:
+
+- **DATABASE_URL**: MySQL/TiDB connection string
+- **ADMIN_SESSION_SECRET**: Long random string used to sign admin sessions
+
+For production, set `ADMIN_SESSION_SECRET` before starting the server. If it is missing in production, admin session creation fails intentionally.
 
 ---
 

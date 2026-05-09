@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 interface ProtectedAdminRouteProps {
   children: React.ReactNode;
@@ -9,26 +10,23 @@ export default function ProtectedAdminRoute({ children }: ProtectedAdminRoutePro
   const [, navigate] = useLocation();
   const [isChecking, setIsChecking] = useState(true);
   const [hasSession, setHasSession] = useState(false);
+  const verifySession = trpc.admin.verifySession.useQuery(undefined, {
+    retry: false,
+  });
 
   useEffect(() => {
-    // Add a small delay to allow cookie to be set after redirect
-    const timer = setTimeout(() => {
-      // Check if admin_session cookie exists
-      const adminSession = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("admin_session="));
+    if (verifySession.isLoading) return;
 
-      if (adminSession) {
-        setHasSession(true);
-      } else {
-        // Redirect to login if no session
-        navigate("/admin/login");
-      }
+    if (verifySession.data?.authenticated) {
+      setHasSession(true);
       setIsChecking(false);
-    }, 200);
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
+    setHasSession(false);
+    setIsChecking(false);
+    navigate("/admin/login");
+  }, [navigate, verifySession.data?.authenticated, verifySession.isLoading]);
 
   if (isChecking) {
     return (

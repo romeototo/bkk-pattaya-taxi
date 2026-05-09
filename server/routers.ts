@@ -1,9 +1,10 @@
 import { COOKIE_NAME } from "@shared/const";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router, adminProcedure, adminSessionProcedure } from "./_core/trpc";
+import { publicProcedure, router, adminProcedure, adminSessionProcedure, protectedProcedure } from "./_core/trpc";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { createAdminSessionCookie, verifyAdminSessionCookie } from "./_core/adminSession";
 import { z } from "zod";
-import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, hashPassword, sendTelegramNotification } from "./db";
+import { createBooking, getBookings, getBookingById, updateBookingStatus, getBookingStats, searchBookings, getNotificationSettings, updateAdminNotificationChannels, updateUserNotificationPreferences, verifyAdminPassword, sendTelegramNotification } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { invokeLLM } from "./_core/llm";
 
@@ -68,7 +69,7 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const booking = await createBooking({
+        const bookingData = {
           fullName: input.fullName,
           phone: input.phone,
           email: input.email,
@@ -81,31 +82,32 @@ export const appRouter = router({
           preferredContactMethod: input.preferredContactMethod,
           notes: input.notes,
           status: "pending",
-        });
+        } as const;
 
-        // Send notifications
-        await notifyOwner({
-          title: "New Booking Received",
-          content: `New booking from ${input.fullName} (${input.phone}) - ${input.pickupLocation} to ${input.dropoffLocation} on ${input.travelDate}`,
-        });
+        const bookingResult = await createBooking(bookingData).then(
+          booking => ({ saved: true as const, booking }),
+          error => {
+            console.error("[Booking] Failed to save booking, continuing notifications:", error);
+            return { saved: false as const, booking: null };
+          },
+        );
 
-        // Send Telegram notification
-        await sendTelegramNotification({
-          fullName: input.fullName,
-          phone: input.phone,
-          email: input.email,
-          pickupLocation: input.pickupLocation,
-          dropoffLocation: input.dropoffLocation,
-          travelDate: input.travelDate,
-          travelTime: input.travelTime,
-          passengers: input.passengers,
-          luggage: input.luggage,
-          preferredContactMethod: input.preferredContactMethod,
-          notes: input.notes,
-          status: "pending",
-        });
+        const notificationResults = await Promise.allSettled([
+          notifyOwner({
+            title: "New Booking Received",
+            content: `New booking from ${input.fullName} (${input.phone}) - ${input.pickupLocation} to ${input.dropoffLocation} on ${input.travelDate}`,
+          }),
+          sendTelegramNotification(bookingData),
+        ]);
 
-        return booking;
+        const telegramSent = notificationResults[1].status === "fulfilled" && notificationResults[1].value === true;
+
+        return {
+          success: true,
+          bookingSaved: bookingResult.saved,
+          telegramSent,
+          booking: bookingResult.booking,
+        };
       }),
   }),
 
@@ -116,22 +118,15 @@ export const appRouter = router({
         password: z.string().min(1, "Password is required"),
       }))
       .mutation(async ({ input, ctx }) => {
-        // Use environment variables for admin credentials
-        const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+        const admin = await verifyAdminPassword(input.username, input.password);
 
-        // Simple authentication for now (in production, use database + bcrypt)
-        if (input.username !== ADMIN_USERNAME || input.password !== ADMIN_PASSWORD) {
+        if (!admin) {
           throw new Error("Invalid username or password");
         }
 
-        // Set admin_session cookie
-        ctx.res.cookie("admin_session", JSON.stringify({ username: input.username, authenticated: true }), {
+        ctx.res.cookie("admin_session", createAdminSessionCookie(admin), {
+          ...getSessionCookieOptions(ctx.req),
           maxAge: 24 * 60 * 60 * 1000,
-          httpOnly: false,  // Allow JavaScript to read for verification
-          secure: false,    // Allow in development
-          sameSite: "lax",
-          path: "/",
         });
 
         return { success: true, message: "Admin login successful" };
@@ -149,8 +144,9 @@ export const appRouter = router({
         return { authenticated: false };
       }
       try {
-        const session = JSON.parse(adminSession);
-        return { authenticated: session.authenticated === true, username: session.username };
+        const session = verifyAdminSessionCookie(adminSession);
+        if (!session) return { authenticated: false };
+        return { authenticated: true, username: session.username };
       } catch (error) {
         return { authenticated: false };
       }
@@ -200,33 +196,35 @@ export const appRouter = router({
 
     updateAdminChannels: adminProcedure
       .input(z.object({
-        userId: z.number(),
         lineToken: z.string().optional(),
         emailEnabled: z.boolean().optional(),
         telegramChatId: z.string().optional(),
       }))
-      .mutation(async ({ input }) => {
-        return updateAdminNotificationChannels(input.userId, {
+      .mutation(async ({ input, ctx }) => {
+        return updateAdminNotificationChannels(ctx.user.id, {
           lineToken: input.lineToken,
           emailEnabled: input.emailEnabled,
           telegramChatId: input.telegramChatId,
         });
       }),
 
-    updateUserPreferences: publicProcedure
+    updateUserPreferences: protectedProcedure
       .input(z.object({
-        userId: z.number(),
         emailNotifications: z.boolean().optional(),
         notifyOnConfirmed: z.boolean().optional(),
         notifyOnCompleted: z.boolean().optional(),
         notifyOnCancelled: z.boolean().optional(),
+        enableScheduledNotifications: z.boolean().optional(),
+        scheduledMinutesBefore: z.number().optional(),
       }))
-      .mutation(async ({ input }) => {
-        return updateUserNotificationPreferences(input.userId, {
+      .mutation(async ({ input, ctx }) => {
+        return updateUserNotificationPreferences(ctx.user.id, {
           emailNotifications: input.emailNotifications,
           notifyOnConfirmed: input.notifyOnConfirmed,
           notifyOnCompleted: input.notifyOnCompleted,
           notifyOnCancelled: input.notifyOnCancelled,
+          enableScheduledNotifications: input.enableScheduledNotifications,
+          scheduledMinutesBefore: input.scheduledMinutesBefore,
         });
       }),
   }),

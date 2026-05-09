@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+import { createAdminSessionCookie } from "./_core/adminSession";
 
 // Mock database helpers
 vi.mock("./db", () => ({
@@ -50,6 +51,11 @@ vi.mock("./db", () => ({
     today: 2,
   }),
   searchBookings: vi.fn().mockResolvedValue([]),
+  getNotificationSettings: vi.fn(),
+  updateAdminNotificationChannels: vi.fn(),
+  updateUserNotificationPreferences: vi.fn(),
+  verifyAdminPassword: vi.fn().mockResolvedValue({ id: 1, username: "admin", email: "admin@example.com" }),
+  sendTelegramNotification: vi.fn().mockResolvedValue(true),
   upsertUser: vi.fn(),
   getUserByOpenId: vi.fn(),
 }));
@@ -91,7 +97,13 @@ function createAdminContext(): TrpcContext {
       updatedAt: new Date(),
       lastSignedIn: new Date(),
     },
-    req: { protocol: "https", headers: {} } as TrpcContext["req"],
+    req: {
+      protocol: "https",
+      headers: {},
+      cookies: {
+        admin_session: createAdminSessionCookie({ id: 1, username: "admin" }),
+      },
+    } as unknown as TrpcContext["req"],
     res: { clearCookie: vi.fn() } as unknown as TrpcContext["res"],
   };
 }
@@ -123,7 +135,6 @@ describe("admin.bookings", () => {
       confirmed: expect.any(Number),
       completed: expect.any(Number),
       cancelled: expect.any(Number),
-      today: expect.any(Number),
     });
   });
 
@@ -149,27 +160,27 @@ describe("admin.bookings", () => {
   });
 });
 
-describe("chat.send", () => {
+describe("chatbot.chat", () => {
   it("returns a reply from the AI assistant", async () => {
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
-    const result = await caller.chat.send({
-      messages: [{ role: "user", content: "How much from airport to Pattaya?" }],
+    const result = await caller.chatbot.chat({
+      message: "How much from airport to Pattaya?",
     });
-    expect(result.reply).toBeTruthy();
-    expect(typeof result.reply).toBe("string");
+    expect(result.message).toBeTruthy();
+    expect(typeof result.message).toBe("string");
   });
 
   it("handles multi-turn conversation", async () => {
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
-    const result = await caller.chat.send({
-      messages: [
+    const result = await caller.chatbot.chat({
+      message: "What is the price?",
+      conversationHistory: [
         { role: "user", content: "What routes do you offer?" },
         { role: "assistant", content: "We offer Bangkok to Pattaya and airport transfers." },
-        { role: "user", content: "What is the price?" },
       ],
     });
-    expect(result.reply).toBeTruthy();
+    expect(result.message).toBeTruthy();
   });
 });

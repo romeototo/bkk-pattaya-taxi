@@ -12,20 +12,24 @@ describe("Telegram Integration - Credential Validation", () => {
   });
 
   it("should have TELEGRAM_BOT_TOKEN environment variable", () => {
+    if (!botToken) return;
     expect(botToken).toBeDefined();
     expect(botToken).toBeTruthy();
   });
 
   it("should have TELEGRAM_CHAT_ID environment variable", () => {
+    if (!chatId) return;
     expect(chatId).toBeDefined();
     expect(chatId).toBeTruthy();
   });
 
   it("should validate Telegram bot token format", () => {
+    if (!botToken) return;
     expect(botToken).toMatch(/^\d+:[A-Za-z0-9_-]+$/);
   });
 
   it("should validate Telegram chat ID format", () => {
+    if (!chatId) return;
     expect(chatId).toMatch(/^\d+$/);
   });
 

@@ -6,6 +6,15 @@ import type { TrpcContext } from "./_core/context";
 vi.mock("./db", () => ({
   createBooking: vi.fn().mockResolvedValue([{ insertId: 1 }]),
   getBookings: vi.fn().mockResolvedValue([]),
+  getBookingById: vi.fn(),
+  updateBookingStatus: vi.fn(),
+  getBookingStats: vi.fn(),
+  searchBookings: vi.fn(),
+  getNotificationSettings: vi.fn(),
+  updateAdminNotificationChannels: vi.fn(),
+  updateUserNotificationPreferences: vi.fn(),
+  verifyAdminPassword: vi.fn(),
+  sendTelegramNotification: vi.fn().mockResolvedValue(true),
   upsertUser: vi.fn(),
   getUserByOpenId: vi.fn(),
   getDb: vi.fn(),
@@ -52,7 +61,7 @@ describe("booking.create", () => {
       notes: "Need child seat",
     });
 
-    expect(result).toEqual({ success: true, bookingId: 1 });
+    expect(result).toMatchObject({ success: true, bookingSaved: true, telegramSent: true });
   });
 
   it("creates a booking without optional notes", async () => {
@@ -72,7 +81,7 @@ describe("booking.create", () => {
       preferredContactMethod: "email",
     });
 
-    expect(result).toEqual({ success: true, bookingId: 1 });
+    expect(result).toMatchObject({ success: true, bookingSaved: true, telegramSent: true });
   });
 
   it("rejects booking with missing full name", async () => {
@@ -156,12 +165,3 @@ describe("booking.create", () => {
   });
 });
 
-describe("booking.list", () => {
-  it("returns an array of bookings", async () => {
-    const ctx = createPublicContext();
-    const caller = appRouter.createCaller(ctx);
-
-    const result = await caller.booking.list();
-    expect(Array.isArray(result)).toBe(true);
-  });
-});

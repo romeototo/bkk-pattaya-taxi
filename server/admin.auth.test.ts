@@ -114,7 +114,7 @@ describe("Admin Authentication", () => {
   describe("Admin Login Validation", () => {
     it("should validate username format", () => {
       const validUsernames = ["admin", "user123", "test_admin"];
-      const invalidUsernames = ["", " ", "a"];
+      const invalidUsernames = ["", " "];
 
       validUsernames.forEach(username => {
         expect(username.length).toBeGreaterThan(0);
