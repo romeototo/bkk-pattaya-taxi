@@ -39,7 +39,7 @@ export function Navbar() {
             <button
               key={item.id}
               onClick={() => handleNav(item.id)}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm text-muted-foreground hover:text-[var(--color-gold)] transition-colors"
             >
               {item.label}
             </button>
@@ -50,7 +50,7 @@ export function Navbar() {
           {/* Language toggle */}
           <button
             onClick={toggleLang}
-            className="text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:border-primary/40 transition-colors text-muted-foreground hover:text-primary"
+            className="text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:border-[var(--color-gold)]/40 transition-colors text-muted-foreground hover:text-[var(--color-gold)]"
             aria-label="Switch language"
           >
             {lang === "en" ? "🇹🇭 TH" : "🇬🇧 EN"}
@@ -82,7 +82,7 @@ export function Navbar() {
               <button
                 key={item.id}
                 onClick={() => handleNav(item.id)}
-                className="text-left text-sm text-muted-foreground hover:text-primary transition-colors py-2"
+                className="text-left text-sm text-muted-foreground hover:text-[var(--color-gold)] transition-colors py-2"
               >
                 {item.label}
               </button>

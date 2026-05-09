@@ -55,7 +55,7 @@ export function StatsSection() {
 
   return (
     <section className="py-12 lg:py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-gold)]/5 via-transparent to-[var(--color-gold)]/5" />
       <div className="container relative">
         <motion.div
           initial="hidden"
@@ -70,18 +70,21 @@ export function StatsSection() {
               variants={fadeInUp}
               className="text-center group"
             >
-              <div className="glass-card rounded-2xl p-6 lg:p-8 hover:border-primary/40 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                  {stat.icon}
+              <div className="glass-card rounded-2xl p-6 lg:p-8 hover:border-[var(--color-gold)]/40 transition-all duration-300 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-gold)]/0 to-[var(--color-gold)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-gold)] mx-auto mb-4 group-hover:bg-[var(--color-gold)]/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(213,181,99,0.2)] transition-all">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl lg:text-4xl font-bold gradient-gold-text drop-shadow-sm mb-1">
+                    {stat.isDecimal ? (
+                      <span className="tabular-nums">4.9</span>
+                    ) : (
+                      <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </div>
-                <div className="text-3xl lg:text-4xl font-bold text-foreground mb-1">
-                  {stat.isDecimal ? (
-                    <span className="tabular-nums">4.9</span>
-                  ) : (
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
               </div>
             </motion.div>
           ))}

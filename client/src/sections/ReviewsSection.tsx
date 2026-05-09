@@ -51,15 +51,15 @@ export function ReviewsSection() {
           variants={fadeInUp}
           className="max-w-3xl mx-auto mb-8"
         >
-          <Card className="glass-card border-primary/20 relative overflow-hidden">
-            <div className="absolute top-6 right-6 text-primary/10">
+          <Card className="glass-card border-primary/20 hover:border-[var(--color-gold)]/20 transition-colors relative overflow-hidden">
+            <div className="absolute top-6 right-6 text-[var(--color-gold)]/10">
               <Quote className="w-20 h-20" />
             </div>
             <CardContent className="p-8 lg:p-12">
               {/* Stars */}
               <div className="flex items-center gap-1 mb-6">
                 {Array.from({ length: reviews[active].rating }).map((_, j) => (
-                  <Star key={j} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={j} className="w-5 h-5 fill-[var(--color-gold)] text-[var(--color-gold)] drop-shadow-[0_0_8px_rgba(213,181,99,0.5)]" />
                 ))}
               </div>
 
@@ -71,7 +71,7 @@ export function ReviewsSection() {
               {/* Author */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-primary font-semibold text-base border border-primary/20">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent flex items-center justify-center text-[var(--color-gold)] font-semibold text-base border border-[var(--color-gold)]/30 shadow-[0_0_15px_rgba(213,181,99,0.1)]">
                     {reviews[active].name.split(" ").map(n => n[0]).join("")}
                   </div>
                   <div>
@@ -85,7 +85,7 @@ export function ReviewsSection() {
                   <button
                     type="button"
                     onClick={() => handleManualNav(prev)}
-                    className="w-10 h-10 rounded-full border border-border hover:border-primary/50 hover:bg-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all"
+                    className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
                     aria-label="Previous review"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -93,7 +93,7 @@ export function ReviewsSection() {
                   <button
                     type="button"
                     onClick={() => handleManualNav(next)}
-                    className="w-10 h-10 rounded-full border border-border hover:border-primary/50 hover:bg-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all"
+                    className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
                     aria-label="Next review"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -113,7 +113,7 @@ export function ReviewsSection() {
               onClick={() => handleManualNav(() => setActive(i))}
               className={`h-2 rounded-full transition-all duration-300 ${
                 i === active
-                  ? "w-8 bg-primary"
+                  ? "w-8 bg-[var(--color-gold)] shadow-[0_0_8px_rgba(213,181,99,0.4)]"
                   : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
               }`}
               aria-label={`Go to review ${i + 1}`}
