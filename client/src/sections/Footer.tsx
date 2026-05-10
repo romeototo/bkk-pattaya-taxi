@@ -3,7 +3,7 @@ import { IMAGES, WHATSAPP_URL, LINE_URL, PHONE, scrollToSection } from "@/config
 import { MessageCircle, Phone as PhoneIcon, MapPin, ChevronRight } from "lucide-react";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const navItems = [
     { label: t.nav.services, id: "services" },
@@ -110,7 +110,12 @@ export function Footer() {
       <div className="border-t border-border/30">
         <div className="container py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-muted-foreground">{t.footer.copyright}</p>
-          <p className="text-xs text-muted-foreground">🇹🇭 Serving Bangkok, Pattaya & surrounding areas</p>
+          <div className="flex items-center gap-4">
+            <a href={`${import.meta.env.BASE_URL}legal`} className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              {lang === "th" ? "เงื่อนไขการใช้งาน" : "Terms & Privacy"}
+            </a>
+            <p className="text-xs text-muted-foreground">🇹🇭 {lang === "th" ? "ให้บริการกรุงเทพฯ พัทยา และพื้นที่ใกล้เคียง" : "Serving Bangkok, Pattaya & surrounding areas"}</p>
+          </div>
         </div>
       </div>
     </footer>
