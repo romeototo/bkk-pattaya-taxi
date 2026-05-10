@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,10 +11,10 @@ import { pricing } from "@/config/pricing";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin, Calendar, Clock, Car, CheckCircle2 } from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Clock, Car, CheckCircle2, AlertCircle } from "lucide-react";
 
 export function BookingSection() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -32,8 +32,26 @@ export function BookingSection() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const createBookingMutation = trpc.booking.create.useMutation();
   const isAirportPickup = /airport|\bBKK\b|\bDMK\b|\bUTP\b/i.test(formData.pickupLocation);
+
+  // Validation logic
+  const validateForm = useCallback(() => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.fullName.trim()) newErrors.fullName = lang === "th" ? "กรุณากรอกชื่อ" : "Name is required";
+    if (!formData.phone.trim()) newErrors.phone = lang === "th" ? "กรุณากรอกเบอร์โทร" : "Phone is required";
+    if (!formData.pickupLocation.trim()) newErrors.pickupLocation = lang === "th" ? "กรุณาเลือกจุดรับ" : "Pickup location is required";
+    if (!formData.dropoffLocation.trim()) newErrors.dropoffLocation = lang === "th" ? "กรุณาเลือกจุดส่ง" : "Drop-off location is required";
+    if (!formData.travelDate) newErrors.travelDate = lang === "th" ? "กรุณาเลือกวันเดินทาง" : "Travel date is required";
+    if (!formData.travelTime) newErrors.travelTime = lang === "th" ? "กรุณาเลือกเวลา" : "Travel time is required";
+    return newErrors;
+  }, [formData, lang]);
+
+  const isFormValid = useMemo(() => {
+    return Object.keys(validateForm()).length === 0;
+  }, [validateForm]);
 
   // Dynamic price calculation
   const calculatedPrice = useMemo(() => {
@@ -51,8 +69,20 @@ export function BookingSection() {
     return "฿1,500+"; // Baseline
   }, [formData.pickupLocation, formData.dropoffLocation]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
+    // Mark all fields as touched
+    setTouched({ fullName: true, phone: true, pickupLocation: true, dropoffLocation: true, travelDate: true, travelTime: true });
+
+    const formErrors = validateForm();
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length > 0) {
+      toast.error(lang === "th" ? "กรุณากรอกข้อมูลให้ครบ" : "Please fill in all required fields");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const bookingNotes = [
@@ -99,6 +129,15 @@ export function BookingSection() {
     setIsSubmitting(false);
   };
 
+  // Helper for field error display
+  const FieldError = ({ field }: { field: string }) => {
+    if (!touched[field] || !errors[field]) return null;
+    return <p className="text-xs text-red-400 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors[field]}</p>;
+  };
+
+  const fieldClass = (field: string) =>
+    `bg-background/50 border-border ${touched[field] && errors[field] ? 'border-red-500 ring-1 ring-red-500/30' : ''}`;
+
   return (
     <section id="booking" className="py-20 lg:py-28 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
@@ -118,16 +157,18 @@ export function BookingSection() {
                   {/* Route Information */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-primary" /> Route Details
+                      <MapPin className="w-5 h-5 text-primary" /> {t.booking.routeDetails}
                     </h3>
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup}</label>
-                        <LocationSelect value={formData.pickupLocation} onChange={(val) => setFormData({ ...formData, pickupLocation: val })} placeholder="e.g., Suvarnabhumi Airport" className="bg-background/50 border-border" />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup} <span className="text-red-400">*</span></label>
+                        <LocationSelect value={formData.pickupLocation} onChange={(val) => { setFormData({ ...formData, pickupLocation: val }); setTouched(p => ({...p, pickupLocation: true})); }} placeholder="e.g., Suvarnabhumi Airport" className={fieldClass('pickupLocation')} />
+                        <FieldError field="pickupLocation" />
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff}</label>
-                        <LocationSelect value={formData.dropoffLocation} onChange={(val) => setFormData({ ...formData, dropoffLocation: val })} placeholder="e.g., Hilton Pattaya" className="bg-background/50 border-border" />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff} <span className="text-red-400">*</span></label>
+                        <LocationSelect value={formData.dropoffLocation} onChange={(val) => { setFormData({ ...formData, dropoffLocation: val }); setTouched(p => ({...p, dropoffLocation: true})); }} placeholder="e.g., Hilton Pattaya" className={fieldClass('dropoffLocation')} />
+                        <FieldError field="dropoffLocation" />
                       </div>
                     </div>
                   </div>
@@ -135,16 +176,18 @@ export function BookingSection() {
                   {/* Travel Schedule */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-primary" /> Schedule & Vehicle
+                      <Calendar className="w-5 h-5 text-primary" /> {t.booking.scheduleVehicle}
                     </h3>
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.date}</label>
-                        <Input type="date" value={formData.travelDate} onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })} min={new Date().toISOString().split("T")[0]} className="bg-background/50 border-border text-foreground [color-scheme:dark]" required />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.date} <span className="text-red-400">*</span></label>
+                        <Input type="date" value={formData.travelDate} onChange={(e) => { setFormData({ ...formData, travelDate: e.target.value }); setTouched(p => ({...p, travelDate: true})); }} min={new Date().toISOString().split("T")[0]} className={`text-foreground [color-scheme:dark] ${fieldClass('travelDate')}`} required />
+                        <FieldError field="travelDate" />
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.time}</label>
-                        <Input type="time" value={formData.travelTime} onChange={(e) => setFormData({ ...formData, travelTime: e.target.value })} className="bg-background/50 border-border text-foreground [color-scheme:dark]" required />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.time} <span className="text-red-400">*</span></label>
+                        <Input type="time" value={formData.travelTime} onChange={(e) => { setFormData({ ...formData, travelTime: e.target.value }); setTouched(p => ({...p, travelTime: true})); }} className={`text-foreground [color-scheme:dark] ${fieldClass('travelTime')}`} required />
+                        <FieldError field="travelTime" />
                       </div>
                     </div>
                     {isAirportPickup && (
@@ -168,22 +211,24 @@ export function BookingSection() {
                   {/* Contact Details */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-serif font-semibold border-b border-border pb-2 flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary" /> Contact Details
+                      <CheckCircle2 className="w-5 h-5 text-primary" /> {t.booking.contactSection}
                     </h3>
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.fullName}</label>
-                        <Input placeholder="Your full name" value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="bg-background/50 border-border" required />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.fullName} <span className="text-red-400">*</span></label>
+                        <Input placeholder="Your full name" value={formData.fullName} onChange={(e) => { setFormData({ ...formData, fullName: e.target.value }); setTouched(p => ({...p, fullName: true})); }} className={fieldClass('fullName')} required />
+                        <FieldError field="fullName" />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.email}</label>
-                        <Input type="email" placeholder="your.email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background/50 border-border" required />
+                        <Input type="email" placeholder="your.email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background/50 border-border" />
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.phone}</label>
-                        <Input placeholder="+66 82 982 4986" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="bg-background/50 border-border" required />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.phone} <span className="text-red-400">*</span></label>
+                        <Input placeholder="+66 82 982 4986" value={formData.phone} onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setTouched(p => ({...p, phone: true})); }} className={fieldClass('phone')} required />
+                        <FieldError field="phone" />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.contactMethod}</label>
@@ -207,8 +252,8 @@ export function BookingSection() {
 
                   {/* Mobile Submit Button (hidden on desktop, summary card takes over) */}
                   <div className="lg:hidden mt-6">
-                    <Button type="submit" size="lg" className="w-full bg-whatsapp hover:opacity-90 text-white text-base py-6 shadow-lg shadow-green-500/25" disabled={isSubmitting}>
-                      {isSubmitting ? "Processing..." : "Confirm Booking via WhatsApp"}
+                    <Button type="submit" size="lg" className={`w-full text-white text-base py-6 shadow-lg transition-all ${isFormValid ? 'bg-whatsapp hover:opacity-90 shadow-green-500/25' : 'bg-muted-foreground/40'}`} disabled={isSubmitting}>
+                      {isSubmitting ? (lang === "th" ? "กำลังดำเนินการ..." : "Processing...") : t.booking.confirmBtn}
                       {!isSubmitting && <ArrowRight className="w-5 h-5 ml-2" />}
                     </Button>
                   </div>
@@ -223,7 +268,7 @@ export function BookingSection() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
               <CardHeader className="bg-primary/5 border-b border-border/50 pb-4">
                 <CardTitle className="font-serif text-xl flex items-center gap-2">
-                  Booking Summary
+                  {t.booking.bookingSummary}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -231,16 +276,16 @@ export function BookingSection() {
                 {/* Details List */}
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between items-start gap-4">
-                    <span className="text-muted-foreground whitespace-nowrap">Route</span>
+                    <span className="text-muted-foreground whitespace-nowrap">{t.booking.route}</span>
                     <span className="font-medium text-right">
                       {formData.pickupLocation || "---"} <br/>
-                      <span className="text-muted-foreground text-xs">to</span> <br/>
+                      <span className="text-muted-foreground text-xs">→</span> <br/>
                       {formData.dropoffLocation || "---"}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-muted-foreground">Date & Time</span>
+                    <span className="text-muted-foreground">{t.booking.dateTime}</span>
                     <span className="font-medium">
                       {formData.travelDate ? `${formData.travelDate}` : "---"}
                       {formData.travelTime ? `, ${formData.travelTime}` : ""}
@@ -248,8 +293,8 @@ export function BookingSection() {
                   </div>
                   
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-muted-foreground">Passengers</span>
-                    <span className="font-medium">{formData.passengers} Pax</span>
+                    <span className="text-muted-foreground">{t.booking.passengers}</span>
+                    <span className="font-medium">{formData.passengers} {t.booking.pax}</span>
                   </div>
                 </div>
 
@@ -257,34 +302,34 @@ export function BookingSection() {
 
                 {/* Price Display */}
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Estimated Total</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t.booking.estimatedTotal}</p>
                   <div className="flex items-end gap-2">
                     <span className="text-3xl font-bold text-primary">{calculatedPrice}</span>
                     <span className="text-sm text-muted-foreground mb-1 pb-1 text-decoration-line-through opacity-60">฿2,000</span>
                   </div>
                   <p className="text-xs gradient-gold-text mt-2 font-medium flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-[oklch(0.85_0.12_85)]" /> Fixed Price Guarantee
+                    <CheckCircle2 className="w-3 h-3 text-[oklch(0.85_0.12_85)]" /> {t.booking.fixedPrice}
                   </p>
                 </div>
 
                 <Button 
-                  onClick={handleSubmit} 
+                  onClick={() => handleSubmit()} 
                   size="lg" 
-                  className="w-full bg-whatsapp hover:opacity-90 text-white text-base py-6 mt-4 shadow-xl shadow-green-500/30 group border-0" 
+                  className={`w-full text-white text-base py-6 mt-4 shadow-xl group border-0 transition-all ${isFormValid ? 'bg-whatsapp hover:opacity-90 shadow-green-500/30' : 'bg-muted-foreground/50 cursor-not-allowed'}`} 
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                      Processing...
+                      {lang === "th" ? "กำลังดำเนินการ..." : "Processing..."}  
                     </span>
                   ) : (
-                    <>Book via WhatsApp <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
+                    <>{t.booking.bookBtn} <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
                   )}
                 </Button>
                 
                 <p className="text-xs text-center text-muted-foreground">
-                  No credit card required. Pay to driver directly.
+                  {t.booking.noCard}
                 </p>
               </CardContent>
             </Card>

@@ -20,6 +20,9 @@ export type Translations = {
     date: string; time: string; fullName: string; email: string;
     phone: string; passengers: string; luggage: string;
     contactMethod: string; notes: string; submit: string; success: string;
+    routeDetails: string; scheduleVehicle: string; contactSection: string;
+    bookingSummary: string; estimatedTotal: string; fixedPrice: string; noCard: string;
+    route: string; dateTime: string; pax: string; confirmBtn: string; bookBtn: string;
   };
   gallery: { title: string; subtitle: string };
   faq: { title: string; subtitle: string; items: Array<{ q: string; a: string }> };

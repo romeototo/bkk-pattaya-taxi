@@ -53,7 +53,7 @@ export function Navbar() {
             className="text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:border-[var(--color-gold)]/40 transition-colors text-muted-foreground hover:text-[var(--color-gold)]"
             aria-label="Switch language"
           >
-            {lang === "en" ? "🇹🇭 TH" : "🇬🇧 EN"}
+            {lang === "en" ? "ไทย" : "EN"}
           </button>
 
           <Button
