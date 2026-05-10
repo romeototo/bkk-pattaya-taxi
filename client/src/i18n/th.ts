@@ -76,6 +76,16 @@ export const th: Translations = {
     pax: "คน",
     confirmBtn: "ยืนยันจองผ่าน WhatsApp",
     bookBtn: "จองผ่าน WhatsApp",
+    flightNumber: "เที่ยวบิน (สำหรับรับที่สนามบิน)",
+    placeholders: {
+      pickup: "เช่น สนามบินสุวรรณภูมิ",
+      dropoff: "เช่น โรงแรมฮิลตัน พัทยา",
+      fullName: "ชื่อ-นามสกุลของคุณ",
+      email: "your.email@example.com",
+      phone: "+66 82 982 4986",
+      notes: "เบาะเด็ก, ชื่อห้องโรงแรม, หรือคำขอพิเศษ",
+      flightNumber: "เช่น TG305",
+    },
   },
   gallery: {
     title: "รถและจุดหมายปลายทาง",

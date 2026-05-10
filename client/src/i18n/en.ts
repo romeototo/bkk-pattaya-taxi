@@ -76,6 +76,16 @@ export const en: Translations = {
     pax: "Pax",
     confirmBtn: "Confirm Booking via WhatsApp",
     bookBtn: "Book via WhatsApp",
+    flightNumber: "Flight Number (for Airport Pickup)",
+    placeholders: {
+      pickup: "e.g., Suvarnabhumi Airport",
+      dropoff: "e.g., Hilton Pattaya",
+      fullName: "Your full name",
+      email: "your.email@example.com",
+      phone: "+66 82 982 4986",
+      notes: "Child seat, hotel room name, or any special request",
+      flightNumber: "e.g., TG305",
+    },
   },
   gallery: {
     title: "Our Fleet & Destinations",

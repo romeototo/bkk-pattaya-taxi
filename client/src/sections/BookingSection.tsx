@@ -7,8 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LocationSelect } from "@/components/LocationSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WHATSAPP_URL, fadeInUp, stagger } from "@/config/constants";
-import { pricing } from "@/config/pricing";
-import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Calendar, Clock, Car, CheckCircle2, AlertCircle } from "lucide-react";
@@ -34,7 +32,7 @@ export function BookingSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const createBookingMutation = trpc.booking.create.useMutation();
+
   const isAirportPickup = /airport|\bBKK\b|\bDMK\b|\bUTP\b/i.test(formData.pickupLocation);
 
   // Validation logic
@@ -104,25 +102,6 @@ export function BookingSection() {
       `${bookingNotes ? `Notes: ${bookingNotes}` : ""}`
     );
 
-    // Best-effort: try backend if available, always open WhatsApp
-    try {
-      await createBookingMutation.mutateAsync({
-        fullName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email,
-        pickupLocation: formData.pickupLocation,
-        dropoffLocation: formData.dropoffLocation,
-        travelDate: formData.travelDate,
-        travelTime: formData.travelTime,
-        passengers: Number(formData.passengers),
-        luggage: Number(formData.luggage),
-        preferredContactMethod: formData.preferredContactMethod as "whatsapp" | "email" | "phone" | "line" | "telegram",
-        notes: bookingNotes || undefined,
-      });
-    } catch {
-      // Backend unavailable — silently proceed to WhatsApp
-    }
-
     toast.success(t.booking.success);
     window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank");
 
@@ -162,12 +141,12 @@ export function BookingSection() {
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.pickup} <span className="text-red-400">*</span></label>
-                        <LocationSelect value={formData.pickupLocation} onChange={(val) => { setFormData({ ...formData, pickupLocation: val }); setTouched(p => ({...p, pickupLocation: true})); }} placeholder="e.g., Suvarnabhumi Airport" className={fieldClass('pickupLocation')} />
+                        <LocationSelect value={formData.pickupLocation} onChange={(val) => { setFormData({ ...formData, pickupLocation: val }); setTouched(p => ({...p, pickupLocation: true})); }} placeholder={t.booking.placeholders.pickup} className={fieldClass('pickupLocation')} />
                         <FieldError field="pickupLocation" />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.dropoff} <span className="text-red-400">*</span></label>
-                        <LocationSelect value={formData.dropoffLocation} onChange={(val) => { setFormData({ ...formData, dropoffLocation: val }); setTouched(p => ({...p, dropoffLocation: true})); }} placeholder="e.g., Hilton Pattaya" className={fieldClass('dropoffLocation')} />
+                        <LocationSelect value={formData.dropoffLocation} onChange={(val) => { setFormData({ ...formData, dropoffLocation: val }); setTouched(p => ({...p, dropoffLocation: true})); }} placeholder={t.booking.placeholders.dropoff} className={fieldClass('dropoffLocation')} />
                         <FieldError field="dropoffLocation" />
                       </div>
                     </div>
@@ -192,8 +171,8 @@ export function BookingSection() {
                     </div>
                     {isAirportPickup && (
                       <div className="animate-in fade-in slide-in-from-top-2">
-                        <label className="text-sm font-medium text-foreground mb-2 block">Flight number (For Airport Pickup)</label>
-                        <Input placeholder="e.g., TG 910" value={formData.flightNumber} onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value })} className="bg-background/50 border-border" />
+                        <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.flightNumber}</label>
+                        <Input placeholder={t.booking.placeholders.flightNumber} value={formData.flightNumber} onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value })} className="bg-background/50 border-border" />
                       </div>
                     )}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
@@ -216,18 +195,18 @@ export function BookingSection() {
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.fullName} <span className="text-red-400">*</span></label>
-                        <Input placeholder="Your full name" value={formData.fullName} onChange={(e) => { setFormData({ ...formData, fullName: e.target.value }); setTouched(p => ({...p, fullName: true})); }} className={fieldClass('fullName')} required />
+                        <Input placeholder={t.booking.placeholders.fullName} value={formData.fullName} onChange={(e) => { setFormData({ ...formData, fullName: e.target.value }); setTouched(p => ({...p, fullName: true})); }} className={fieldClass('fullName')} required />
                         <FieldError field="fullName" />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.email}</label>
-                        <Input type="email" placeholder="your.email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background/50 border-border" />
+                        <Input type="email" placeholder={t.booking.placeholders.email} value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background/50 border-border" />
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
                         <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.phone} <span className="text-red-400">*</span></label>
-                        <Input placeholder="+66 82 982 4986" value={formData.phone} onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setTouched(p => ({...p, phone: true})); }} className={fieldClass('phone')} required />
+                        <Input placeholder={t.booking.placeholders.phone} value={formData.phone} onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setTouched(p => ({...p, phone: true})); }} className={fieldClass('phone')} required />
                         <FieldError field="phone" />
                       </div>
                       <div>
@@ -247,7 +226,7 @@ export function BookingSection() {
                   {/* Additional Notes */}
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">{t.booking.notes}</label>
-                    <Textarea placeholder="Child seat, hotel room name, or any special request" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="bg-background/50 border-border min-h-20" />
+                    <Textarea placeholder={t.booking.placeholders.notes} value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="bg-background/50 border-border min-h-20" />
                   </div>
 
                   {/* Mobile Submit Button (hidden on desktop, summary card takes over) */}

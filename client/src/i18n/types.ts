@@ -23,6 +23,11 @@ export type Translations = {
     routeDetails: string; scheduleVehicle: string; contactSection: string;
     bookingSummary: string; estimatedTotal: string; fixedPrice: string; noCard: string;
     route: string; dateTime: string; pax: string; confirmBtn: string; bookBtn: string;
+    flightNumber: string;
+    placeholders: {
+      pickup: string; dropoff: string; fullName: string;
+      email: string; phone: string; notes: string; flightNumber: string;
+    };
   };
   gallery: { title: string; subtitle: string };
   faq: { title: string; subtitle: string; items: Array<{ q: string; a: string }> };

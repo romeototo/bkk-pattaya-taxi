@@ -6,24 +6,12 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
-import AdminDashboardPro from "./pages/AdminDashboardPro";
-import AdminLogin from "./pages/AdminLogin";
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
-import { TrackBooking } from "./pages/TrackBooking";
 
 function AppRouter() {
   return (
     <Router base={import.meta.env.BASE_URL}>
       <Switch>
         <Route path={"/"} component={Home} />
-        <Route path={"/track"} component={TrackBooking} />
-        <Route path={"/admin/login"} component={AdminLogin} />
-        <Route path={"/admin"} component={() => (
-          <ProtectedAdminRoute>
-            <AdminDashboardPro />
-          </ProtectedAdminRoute>
-        )} />
-        <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>
     </Router>
