@@ -2,7 +2,7 @@ export type Lang = "en" | "th";
 
 export type Translations = {
   nav: { services: string; whyUs: string; reviews: string; gallery: string; faq: string; contact: string; bookNow: string };
-  hero: { badge: string; h1: string; h1span: string; subtitle: string; bookNow: string; whatsapp: string; features: string[] };
+  hero: { badge: string; h1: string; h1span: string; subtitle: string; bookNow: string; whatsapp: string; features: string[]; trustRating: string; trustQuote: string };
   services: {
     title: string; subtitle: string;
     routes: Array<{ name: string; price: string; desc: string; icon: string }>;

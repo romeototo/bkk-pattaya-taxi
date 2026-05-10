@@ -11,6 +11,8 @@ export const en: Translations = {
     bookNow: "Book Now",
     whatsapp: "Chat on WhatsApp",
     features: ["Private Car Only", "Fixed Price", "Airport Pickup", "English Speaking Driver"],
+    trustRating: "4.9/5 Premium Rating",
+    trustQuote: "\"The best transfer experience in Thailand. Highly recommended!\"",
   },
   services: {
     title: "Popular Routes",

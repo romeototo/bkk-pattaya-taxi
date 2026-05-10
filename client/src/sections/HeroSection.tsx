@@ -90,10 +90,10 @@ export function HeroSection() {
                 <div className="flex text-[var(--color-gold)] drop-shadow-[0_0_5px_rgba(213,181,99,0.5)]">
                   <Star className="w-4 h-4 fill-current" /><Star className="w-4 h-4 fill-current" /><Star className="w-4 h-4 fill-current" /><Star className="w-4 h-4 fill-current" /><Star className="w-4 h-4 fill-current" />
                 </div>
-                <div className="text-sm font-bold text-foreground">4.9/5 Premium Rating</div>
+                <div className="text-sm font-bold text-foreground">{t.hero.trustRating}</div>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground italic max-w-[200px]">"The best transfer experience in Thailand. Highly recommended!"</p>
+            <p className="text-sm text-muted-foreground italic max-w-[200px]">{t.hero.trustQuote}</p>
           </motion.div>
         </motion.div>
       </div>

@@ -1,8 +1,0 @@
-{
-  "name": "bkk-pattaya-taxi",
-  "compatibility_date": "2026-05-09",
-  "assets": {
-    "directory": "./dist/public",
-    "not_found_handling": "single-page-application"
-  }
-}
