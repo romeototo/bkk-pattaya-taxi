@@ -43,7 +43,7 @@ export function HeroSection() {
             <Button
               size="lg"
               onClick={() => scrollToSection("booking")}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 text-base px-8 py-6 shadow-xl shadow-primary/30 group"
+              className="bg-animated-gold text-[#111111] font-bold text-base px-8 py-6 shadow-[0_0_20px_rgba(213,181,99,0.3)] hover:shadow-[0_0_30px_rgba(213,181,99,0.5)] group border-0 transition-all hover:-translate-y-1"
             >
               {t.hero.bookNow}
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -75,10 +75,11 @@ export function HeroSection() {
           transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
           className="hidden lg:block relative"
         >
+          <div className="absolute inset-0 bg-[var(--color-gold)]/20 blur-3xl rounded-full" />
           <motion.div 
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="glass-card p-6 rounded-2xl border border-primary/20 shadow-2xl backdrop-blur-md"
+            className="glass-card p-6 rounded-2xl border border-[var(--color-gold)]/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md relative z-10"
           >
             <div className="flex items-center gap-4 mb-3">
               <div className="flex -space-x-2">

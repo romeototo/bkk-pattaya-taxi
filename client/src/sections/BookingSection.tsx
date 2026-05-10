@@ -229,9 +229,8 @@ export function BookingSection() {
                     <Textarea placeholder={t.booking.placeholders.notes} value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="bg-background/50 border-border min-h-20" />
                   </div>
 
-                  {/* Mobile Submit Button (hidden on desktop, summary card takes over) */}
                   <div className="lg:hidden mt-6">
-                    <Button type="submit" size="lg" className={`w-full text-white text-base py-6 shadow-lg transition-all ${isFormValid ? 'bg-whatsapp hover:opacity-90 shadow-green-500/25' : 'bg-muted-foreground/40'}`} disabled={isSubmitting}>
+                    <Button type="submit" size="lg" className={`w-full text-base py-6 transition-all border-0 ${isFormValid ? 'bg-animated-gold text-[#111111] font-bold shadow-[0_0_20px_rgba(213,181,99,0.3)] hover:shadow-[0_0_30px_rgba(213,181,99,0.5)]' : 'bg-muted-foreground/40 text-white cursor-not-allowed'}`} disabled={isSubmitting}>
                       {isSubmitting ? (lang === "th" ? "กำลังดำเนินการ..." : "Processing...") : t.booking.confirmBtn}
                       {!isSubmitting && <ArrowRight className="w-5 h-5 ml-2" />}
                     </Button>
@@ -294,7 +293,7 @@ export function BookingSection() {
                 <Button 
                   onClick={() => handleSubmit()} 
                   size="lg" 
-                  className={`w-full text-white text-base py-6 mt-4 shadow-xl group border-0 transition-all ${isFormValid ? 'bg-whatsapp hover:opacity-90 shadow-green-500/30' : 'bg-muted-foreground/50 cursor-not-allowed'}`} 
+                  className={`w-full text-base py-6 mt-4 group border-0 transition-all ${isFormValid ? 'bg-animated-gold text-[#111111] font-bold shadow-[0_0_20px_rgba(213,181,99,0.3)] hover:shadow-[0_0_30px_rgba(213,181,99,0.5)] hover:-translate-y-1' : 'bg-muted-foreground/50 text-white cursor-not-allowed'}`} 
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
