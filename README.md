@@ -15,6 +15,19 @@
 
 ---
 
+## Project Snapshot
+
+| Item | Details |
+| ---- | ------- |
+| **Role** | SEO landing page and booking flow for a Thailand private taxi service |
+| **Live demo** | [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/) |
+| **Stack** | TypeScript, React, Express, tRPC, Tailwind CSS |
+| **Impact** | Route-focused booking funnel with multi-channel contact paths |
+| **Status** | Active public web product |
+| **Portfolio case study** | [BKK Pattaya Private Taxi](https://romeototo.github.io/portfolio-website/case-studies/bkk-pattaya-taxi/) |
+
+---
+
 ## 📸 Screenshots & UI Design
 The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne Gold** theme to maximize conversion and trust.
 
