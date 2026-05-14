@@ -1,17 +1,21 @@
 # 🚕 BKK Pattaya Private Taxi
 
-> เว็บไซต์ Landing Page และระบบจองรถแท็กซี่ส่วนตัว (Private Transfer) ระหว่างกรุงเทพฯ และพัทยา ที่เน้นทำ SEO และมุ่งเน้นเพิ่มยอด Conversion
+> เว็บไซต์ Landing Page สำหรับบริการรถแท็กซี่ส่วนตัว (Private Transfer) ระหว่างกรุงเทพฯ และพัทยา ที่เน้นทำ SEO และมุ่งเน้นเพิ่มยอด Conversion
 >
-> 🌐 **เว็บไซต์จริง (Live Demo):** [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/)
+> 🌐 **เว็บไซต์จริง (Live Site):** [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/)
 >
-> 🇹🇭 [อ่านเป็นภาษาอังกฤษ (English Version)](./README.md)
+> 🇬🇧 [อ่านเป็นภาษาอังกฤษ (English Version)](./README.md)
 
-![Build](https://img.shields.io/badge/Build-Passing-4CAF50?style=flat-square)
-![Tech](https://img.shields.io/badge/TypeScript-93.8%25-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Framework](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Backend](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
-![Database](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
+<div align="center">
+
+![Build](https://img.shields.io/github/actions/workflow/status/romeototo/bkk-pattaya-taxi/deploy.yml?style=flat-square&label=Deploy)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS_4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+</div>
 
 ---
 
@@ -19,27 +23,20 @@
 
 | รายการ | รายละเอียด |
 | ------ | ----------- |
-| **บทบาท** | SEO landing page และ booking flow สำหรับบริการรถส่วนตัวในไทย |
+| **บทบาท** | SEO landing page สำหรับบริการรถส่วนตัวในไทย |
 | **Live demo** | [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/) |
-| **Stack** | TypeScript, React, Express, tRPC, Tailwind CSS |
-| **Impact** | route-focused booking funnel พร้อมช่องทางติดต่อหลายช่องทาง |
+| **Stack** | React 19, TypeScript, Tailwind CSS 4, Vite, Framer Motion |
+| **Impact** | Route-focused booking funnel พร้อมรองรับ 4 ภาษา และหลายช่องทางติดต่อ |
 | **สถานะ** | Active public web product |
 | **Portfolio case study** | [BKK Pattaya Private Taxi](https://romeototo.github.io/portfolio-website/case-studies/bkk-pattaya-taxi/) |
 
 ---
 
-## 📸 Screenshots & UI Design
-เว็บไซต์ถูกออกแบบมาในธีม **VIP Midnight Blue & Champagne Gold** เพื่อเสริมสร้างภาพลักษณ์ความน่าเชื่อถือ หรูหรา และเป็นมืออาชีพ
+## 📸 Screenshots
 
-| Hero Section (หน้าแรก) | Booking Wizard (ฟอร์มการจอง) |
-| :---: | :---: |
-| ![Hero Section](./docs/screenshot-hero.png) | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
-
-| Why Choose Us (Bento Grid Layout) |
+| Hero Section (หน้าแรก) |
 | :---: |
-| <img src="https://placehold.co/800x400/020817/D5B563?text=Bento+Grid+UI+Screenshot" width="100%"> |
-
-*(หมายเหตุ: ใส่ภาพ Screenshot ของจริงทับลิงก์ placehold.co ในอนาคต)*
+| ![Hero Section](./docs/screenshot-hero.png) |
 
 ---
 
@@ -47,12 +44,14 @@
 
 | หมวดหมู่ | รายละเอียด |
 |----------|---------|
-| 🎨 **Landing Page** | ออกแบบให้โหลดเร็ว รองรับ SEO และแสดงผลได้ดีบนมือถือ พร้อม Animation ด้วย Framer Motion |
-| 📋 **Booking Form** | ฟอร์มจองแบบหลายขั้นตอน (Wizard) พร้อมการตรวจเช็คข้อมูลด้วย Zod และ React Hook Form |
-| 🔔 **ระบบแจ้งเตือน** | ยิงข้อมูลเข้า Google Sheets + Telegram + LINE + อีเมล (SMTP) อัตโนมัติ |
-| 🛡️ **ระบบหลังบ้าน** | แดชบอร์ดจัดการข้อมูลการจอง ดูสถิติ และระบบล็อกอินแอดมิน |
-| 📊 **Analytics** | กราฟสรุปสถิติการใช้งานด้วย Recharts |
-| 🌐 **SEO & 2 ภาษา** | รองรับภาษาไทย/อังกฤษ (EN/TH) พร้อมระบบ Meta tags และ Open Graph |
+| 🎨 **ธีม VIP สุดหรู** | สี Midnight Blue & Champagne Gold สร้างความน่าเชื่อถือ |
+| 📋 **ฟอร์มจองรถ** | เลือกเส้นทาง จำนวนผู้โดยสาร และรายละเอียดการเดินทาง |
+| 🌐 **รองรับ 4 ภาษา** | ไทย, อังกฤษ, จีน, รัสเซีย (i18n) |
+| 💬 **ติดต่อหลายช่องทาง** | WhatsApp, LINE, โทรศัพท์ |
+| 🎬 **Animation สุดสมูท** | Framer Motion สร้างความลื่นไหลในทุกการเลื่อน |
+| 📱 **Responsive** | ออกแบบ Mobile-first รองรับทุกหน้าจอ |
+| 🔍 **SEO** | Meta tags, Open Graph, Semantic HTML |
+| ⚡ **โหลดเร็วมาก** | Static deployment บน GitHub Pages |
 
 ---
 
@@ -61,52 +60,40 @@
 ```mermaid
 graph TD
     A["🌐 หน้าเว็บไซต์<br/>(React + Tailwind)"] --> B["📋 ฟอร์มจอง"]
-    B --> C["🔀 tRPC Router<br/>(Express Backend)"]
-    C --> D["💾 ฐานข้อมูล MySQL<br/>(Drizzle ORM)"]
-    C --> E["📢 บริการส่งการแจ้งเตือน"]
+    A --> C["🌍 ระบบ i18n<br/>(4 ภาษา)"]
+    A --> D["🎬 Framer Motion"]
     
-    E --> F["📊 Google Sheets"]
-    E --> G["🤖 Telegram Bot"]
-    E --> H["💬 LINE Messaging"]
-    E --> I["📧 ส่งอีเมล SMTP"]
+    B --> E["💬 WhatsApp"]
+    B --> F["💬 LINE"]
+    B --> G["📞 โทรศัพท์"]
     
-    J["🔐 ระบบจัดการหลังบ้าน"] --> C
-    J --> K["📈 กราฟและสถิติ<br/>(Recharts)"]
-
+    H["🚀 GitHub Actions"] --> I["📦 Vite Build"]
+    I --> J["🌐 GitHub Pages"]
+    
     style A fill:#6C63FF,color:#fff
-    style C fill:#3178C6,color:#fff
-    style D fill:#4479A1,color:#fff
-    style E fill:#FF6B35,color:#fff
+    style H fill:#3178C6,color:#fff
+    style J fill:#22c55e,color:#fff
 ```
+
+> **หมายเหตุ:** เว็บไซต์นี้เป็น Frontend-only — การจองจะถูกส่งไปยัง WhatsApp/LINE/โทรศัพท์โดยตรง ไม่จำเป็นต้องมี Backend
 
 ---
 
 ## 🛠️ เทคโนโลยีที่ใช้ (Tech Stack)
 
-### หน้าบ้าน (Frontend)
-- **React 19** + TypeScript
-- **Tailwind CSS 4** — ตกแต่งเว็บไซต์อย่างรวดเร็ว
-- **Radix UI** — Component ยืดหยุ่นและเข้าถึงได้ง่าย (Accessible)
-- **Framer Motion** — จัดการ Animation ต่างๆ บนเว็บ
-- **React Hook Form** + Zod — ตรวจจับข้อผิดพลาดในฟอร์มอย่างแม่นยำ
-
-### หลังบ้าน (Backend)
-- **Express** + TypeScript
-- **tRPC** — เชื่อมต่อ API แบบ Type-safe ป้องกันข้อผิดพลาด
-- **Drizzle ORM** — จัดการฐานข้อมูลอย่างมีประสิทธิภาพ
-- **MySQL/TiDB** — ฐานข้อมูลแบบ Relation
-
-### การเชื่อมต่อกับบริการภายนอก (Integrations)
-- **Google Sheets API** — บันทึกข้อมูลคนจองลงตารางอัตโนมัติ
-- **Telegram Bot API** — ส่งแจ้งเตือนการจองให้คนขับผ่านกลุ่ม
-- **LINE Messaging API** — เชื่อมโยงลูกค้า
-- **Nodemailer** — จัดการระบบอีเมลตอบกลับ
+| ส่วน | เทคโนโลยี |
+|------|-----------|
+| **UI Framework** | React 19 + TypeScript |
+| **สไตล์** | Tailwind CSS 4 + Radix UI |
+| **Animation** | Framer Motion |
+| **Icons** | Lucide React |
+| **Build Tool** | Vite 7 |
+| **Deployment** | GitHub Actions → GitHub Pages |
+| **Testing** | Vitest |
 
 ---
 
 ## 🚀 เริ่มต้นใช้งานโปรเจกต์ (Quick Start)
-
-ดูรายละเอียดการตั้งค่าแบบเจาะลึกได้ที่ [คู่มือการติดตั้ง (SETUP_GUIDE.md)](./SETUP_GUIDE.md)
 
 ```bash
 # คัดลอกโปรเจกต์
@@ -116,15 +103,45 @@ cd bkk-pattaya-taxi
 # ติดตั้งไลบรารี
 pnpm install
 
-# ตั้งค่า Environment Variables
-copy .env.example .env
-
-# สร้างฐานข้อมูลและแอดมินคนแรก
-pnpm db:push
-pnpm admin:create -- --username admin --email owner@example.com --password "เปลี่ยนรหัสผ่านที่นี่"
-
 # เปิดเซิร์ฟเวอร์สำหรับพัฒนา
 pnpm dev
+```
+
+เปิดเบราว์เซอร์ไปที่ `http://localhost:5173`
+
+### Build สำหรับ Production
+
+```bash
+pnpm build
+pnpm preview
+```
+
+---
+
+## 📁 โครงสร้างโปรเจกต์
+
+```
+bkk-pattaya-taxi/
+├── client/
+│   ├── index.html          # HTML หลัก
+│   ├── public/             # ไฟล์ static (รูปภาพ, favicon)
+│   └── src/
+│       ├── App.tsx          # Root component
+│       ├── main.tsx         # จุดเริ่มต้น React
+│       ├── index.css        # Global styles + Tailwind
+│       ├── sections/        # ส่วนต่างๆ ของหน้าเว็บ (Hero, Booking, FAQ ฯลฯ)
+│       ├── components/      # UI components (Radix-based)
+│       ├── config/          # ราคาเส้นทาง & การตั้งค่า
+│       ├── contexts/        # React context providers
+│       ├── hooks/           # Custom React hooks
+│       ├── i18n/            # ไฟล์แปลภาษา (TH/EN/CN/RU)
+│       ├── lib/             # Utility functions
+│       └── pages/           # Route pages
+├── .github/workflows/
+│   └── deploy.yml          # GitHub Actions CI/CD
+├── vite.config.ts          # Vite config
+├── tsconfig.json           # TypeScript config
+└── package.json            # Dependencies & scripts
 ```
 
 ---
@@ -132,3 +149,11 @@ pnpm dev
 ## 📄 ลิขสิทธิ์ (License)
 
 [MIT](./LICENSE) © Romeo T.
+
+---
+
+<div align="center">
+  <b>พัฒนาโดย <a href="https://github.com/romeototo">romeototo</a></b><br>
+  <i>Automate · Control · Innovate</i><br>
+  <a href="https://romeototo.github.io/portfolio-website/">ดู Portfolio ของฉัน</a>
+</div>
