@@ -1,17 +1,21 @@
 # 🚕 BKK Pattaya Private Taxi
 
-> High-conversion SEO landing page & booking system for a private taxi service in Thailand.
+> High-conversion SEO landing page for a private taxi service in Thailand.
 >
-> 🌐 **Live Demo:** [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/)
+> 🌐 **Live Site:** [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/)
 >
 > 🇹🇭 [อ่านเป็นภาษาไทย (Thai Version)](./README.th.md)
 
-![Build](https://img.shields.io/badge/Build-Passing-4CAF50?style=flat-square)
-![Tech](https://img.shields.io/badge/TypeScript-93.8%25-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Framework](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Backend](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
-![Database](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
+<div align="center">
+
+![Build](https://img.shields.io/github/actions/workflow/status/romeototo/bkk-pattaya-taxi/deploy.yml?style=flat-square&label=Deploy)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS_4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+</div>
 
 ---
 
@@ -21,25 +25,18 @@
 | ---- | ------- |
 | **Role** | SEO landing page and booking flow for a Thailand private taxi service |
 | **Live demo** | [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/) |
-| **Stack** | TypeScript, React, Express, tRPC, Tailwind CSS |
-| **Impact** | Route-focused booking funnel with multi-channel contact paths |
+| **Stack** | React 19, TypeScript, Tailwind CSS 4, Vite, Framer Motion |
+| **Impact** | Route-focused booking funnel with multi-language support and multi-channel contact paths |
 | **Status** | Active public web product |
 | **Portfolio case study** | [BKK Pattaya Private Taxi](https://romeototo.github.io/portfolio-website/case-studies/bkk-pattaya-taxi/) |
 
 ---
 
-## 📸 Screenshots & UI Design
-The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne Gold** theme to maximize conversion and trust.
+## 📸 Screenshots
 
-| Hero Section | Booking Wizard |
-| :---: | :---: |
-| ![Hero Section](./docs/screenshot-hero.png) | <img src="https://placehold.co/600x400/020817/D5B563?text=Booking+Form+Screenshot" width="100%"> |
-
-| Why Choose Us (Bento Grid Layout) |
+| Hero Section |
 | :---: |
-| <img src="https://placehold.co/800x400/020817/D5B563?text=Bento+Grid+UI+Screenshot" width="100%"> |
-
-*(Note: Replace the placeholder images with actual UI screenshots when available)*
+| ![Hero Section](./docs/screenshot-hero.png) |
 
 ---
 
@@ -47,12 +44,14 @@ The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne
 
 | Category | Details |
 |----------|---------|
-| 🎨 **Landing Page** | SEO-optimized, mobile-responsive with Framer Motion animations |
-| 📋 **Booking Form** | Multi-step form with Zod validation & react-hook-form |
-| 🔔 **Multi-Channel Notifications** | Google Sheets + Telegram + LINE + Email (SMTP) |
-| 🛡️ **Admin Dashboard** | Booking management, analytics, authentication |
-| 📊 **Analytics** | Recharts-based dashboards with booking stats |
-| 🌐 **SEO** | Meta tags, Open Graph, structured data |
+| 🎨 **Premium VIP Theme** | Midnight Blue & Champagne Gold design for luxury feel |
+| 📋 **Booking Form** | Multi-step booking flow with route selection and passenger details |
+| 🌐 **Multi-Language** | Thai, English, Chinese, and Russian support (i18n) |
+| 💬 **Multi-Channel Contact** | WhatsApp, LINE, and phone call integration |
+| 🎬 **Smooth Animations** | Framer Motion entrance animations and micro-interactions |
+| 📱 **Fully Responsive** | Mobile-first design optimized for all screen sizes |
+| 🔍 **SEO Optimized** | Meta tags, Open Graph, semantic HTML structure |
+| ⚡ **Lightning Fast** | Static deployment on GitHub Pages with Vite build optimization |
 
 ---
 
@@ -60,47 +59,37 @@ The site has been recently upgraded to a **Premium VIP Midnight Blue & Champagne
 
 ```mermaid
 graph TD
-    A["🌐 Landing Page<br/>(React + Tailwind)"] --> B["📋 Booking Form"]
-    B --> C["🔀 tRPC Router<br/>(Express Backend)"]
-    C --> D["💾 MySQL/TiDB<br/>(Drizzle ORM)"]
-    C --> E["📢 Notification Service"]
+    A["🌐 Landing Page<br/>(React + Tailwind)"] --> B["📋 Booking Section"]
+    A --> C["🌍 i18n System"]
+    A --> D["🎬 Framer Motion"]
     
-    E --> F["📊 Google Sheets"]
-    E --> G["🤖 Telegram Bot"]
-    E --> H["💬 LINE Messaging"]
-    E --> I["📧 Email SMTP"]
+    B --> E["💬 WhatsApp"]
+    B --> F["💬 LINE"]
+    B --> G["📞 Phone"]
     
-    J["🔐 Admin Dashboard"] --> C
-    J --> K["📈 Analytics<br/>(Recharts)"]
-
+    H["🚀 GitHub Actions"] --> I["📦 Vite Build"]
+    I --> J["🌐 GitHub Pages"]
+    
     style A fill:#6C63FF,color:#fff
-    style C fill:#3178C6,color:#fff
-    style D fill:#4479A1,color:#fff
-    style E fill:#FF6B35,color:#fff
+    style H fill:#3178C6,color:#fff
+    style J fill:#22c55e,color:#fff
 ```
+
+> **Note:** This is a frontend-only application. Booking inquiries are routed directly to WhatsApp/LINE/Phone — no backend server required.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **React 19** + TypeScript — Modern UI with hooks
-- **Tailwind CSS 4** — Utility-first styling
-- **Radix UI** — Accessible component primitives
-- **Framer Motion** — Smooth animations
-- **React Hook Form** + Zod — Type-safe form validation
-
-### Backend
-- **Express** + TypeScript — API server
-- **tRPC** — End-to-end type-safe API
-- **Drizzle ORM** — Type-safe database queries
-- **MySQL/TiDB** — Relational database
-
-### Integrations
-- **Google Sheets API** — Booking spreadsheet sync
-- **Telegram Bot API** — Instant booking notifications
-- **LINE Messaging API** — Customer communication
-- **Nodemailer** — Email confirmations & admin alerts
+| Layer | Technology |
+|-------|-----------|
+| **UI Framework** | React 19 + TypeScript |
+| **Styling** | Tailwind CSS 4 + Radix UI primitives |
+| **Animations** | Framer Motion |
+| **Icons** | Lucide React |
+| **Build Tool** | Vite 7 |
+| **Deployment** | GitHub Actions → GitHub Pages |
+| **Testing** | Vitest |
 
 ---
 
@@ -114,22 +103,18 @@ cd bkk-pattaya-taxi
 # Install dependencies
 pnpm install
 
-# Configure environment values
-copy .env.example .env
-
-# Set up database and create the first admin
-pnpm db:push
-pnpm admin:create -- --username admin --email owner@example.com --password "change-this-password"
-
 # Start development server
 pnpm dev
 ```
 
-The app will be available at `http://localhost:3000`
+The app will be available at `http://localhost:5173`
 
-For Telegram booking alerts, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env`. The backend must be running for form submissions to reach Telegram; GitHub Pages alone only serves the static frontend. If the frontend is deployed on GitHub Pages and the backend is hosted elsewhere, set `VITE_TRPC_URL` to the backend URL, for example `https://your-backend.example.com/api/trpc`.
+### Build for Production
 
-See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed configuration of all notification channels.
+```bash
+pnpm build
+pnpm preview
+```
 
 ---
 
@@ -137,28 +122,50 @@ See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed configuration of all notific
 
 ```
 bkk-pattaya-taxi/
-├── client/              # React frontend
-│   ├── components/      # UI components (Radix + Tailwind)
-│   ├── pages/           # Route pages
-│   └── hooks/           # Custom React hooks
-├── server/              # Express backend
-│   ├── _core/           # Server setup & middleware
-│   ├── routers/         # tRPC routers
-│   └── integrations/    # Google Sheets, Telegram, LINE, Email
-├── shared/              # Shared types & schemas (Zod)
-├── drizzle/             # Database migrations
-└── SETUP_GUIDE.md       # Full deployment guide
+├── client/
+│   ├── index.html          # Entry HTML
+│   ├── public/             # Static assets (images, favicon)
+│   └── src/
+│       ├── App.tsx          # Root component with routing
+│       ├── main.tsx         # React entry point
+│       ├── index.css        # Global styles + Tailwind
+│       ├── sections/        # Page sections (Hero, Booking, FAQ, etc.)
+│       ├── components/      # Reusable UI components (Radix-based)
+│       ├── config/          # Route pricing & app configuration
+│       ├── contexts/        # React context providers
+│       ├── hooks/           # Custom React hooks
+│       ├── i18n/            # Multi-language translations (TH/EN/CN/RU)
+│       ├── lib/             # Utility functions
+│       └── pages/           # Route pages
+├── .github/workflows/
+│   └── deploy.yml          # GitHub Actions CI/CD pipeline
+├── vite.config.ts          # Vite configuration
+├── tsconfig.json           # TypeScript configuration
+└── package.json            # Dependencies & scripts
 ```
 
 ---
 
-## 📚 Documentation
+## 🌐 Deployment
 
-- [**Setup Guide**](./SETUP_GUIDE.md) — Full installation & configuration
-- [**Notification Architecture**](./NOTIFICATION_ARCHITECTURE.md) — Multi-channel notification system design
+The site is automatically deployed to **GitHub Pages** via GitHub Actions on every push to `main`.
+
+The CI/CD pipeline:
+1. Checks out the code
+2. Installs dependencies with `pnpm`
+3. Builds the production bundle with `vite build`
+4. Deploys the `dist/public` folder to GitHub Pages
 
 ---
 
 ## 📄 License
 
 [MIT](./LICENSE) © Romeo T.
+
+---
+
+<div align="center">
+  <b>Developed by <a href="https://github.com/romeototo">romeototo</a></b><br>
+  <i>Automate · Control · Innovate</i><br>
+  <a href="https://romeototo.github.io/portfolio-website/">View My Portfolio</a>
+</div>
