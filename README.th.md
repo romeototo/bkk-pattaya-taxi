@@ -15,6 +15,19 @@
 
 ---
 
+## Project Snapshot
+
+| รายการ | รายละเอียด |
+| ------ | ----------- |
+| **บทบาท** | SEO landing page และ booking flow สำหรับบริการรถส่วนตัวในไทย |
+| **Live demo** | [romeototo.github.io/bkk-pattaya-taxi](https://romeototo.github.io/bkk-pattaya-taxi/) |
+| **Stack** | TypeScript, React, Express, tRPC, Tailwind CSS |
+| **Impact** | route-focused booking funnel พร้อมช่องทางติดต่อหลายช่องทาง |
+| **สถานะ** | Active public web product |
+| **Portfolio case study** | [BKK Pattaya Private Taxi](https://romeototo.github.io/portfolio-website/case-studies/bkk-pattaya-taxi/) |
+
+---
+
 ## 📸 Screenshots & UI Design
 เว็บไซต์ถูกออกแบบมาในธีม **VIP Midnight Blue & Champagne Gold** เพื่อเสริมสร้างภาพลักษณ์ความน่าเชื่อถือ หรูหรา และเป็นมืออาชีพ
 
