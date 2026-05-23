@@ -1,37 +1,10 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { fadeInUp, stagger } from "@/config/constants";
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Car, Star, Clock, Users } from "lucide-react";
 
-function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number; suffix?: string; prefix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isInView) return;
-    const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [isInView, target]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {prefix}{count.toLocaleString()}{suffix}
-    </span>
-  );
+function StatValue({ value, suffix = "" }: { value: number; suffix?: string }) {
+  return <span className="tabular-nums">{value.toLocaleString()}{suffix}</span>;
 }
 
 const stats = {
@@ -54,8 +27,7 @@ export function StatsSection() {
   const currentStats = stats[lang];
 
   return (
-    <section className="py-12 lg:py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-gold)]/5 via-transparent to-[var(--color-gold)]/5" />
+    <section className="py-12 lg:py-16 relative overflow-hidden border-y border-border/60 bg-secondary/20">
       <div className="container relative">
         <motion.div
           initial="hidden"
@@ -70,17 +42,16 @@ export function StatsSection() {
               variants={fadeInUp}
               className="text-center group"
             >
-              <div className="glass-card rounded-2xl p-6 lg:p-8 hover:border-[var(--color-gold)]/40 transition-all duration-300 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-gold)]/0 to-[var(--color-gold)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="rounded-lg border border-border/70 bg-background/35 p-5 lg:p-7 transition-all duration-300 hover:border-[var(--color-gold)]/40 relative overflow-hidden">
                 <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-gold)] mx-auto mb-4 group-hover:bg-[var(--color-gold)]/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(213,181,99,0.2)] transition-all">
+                  <div className="w-11 h-11 rounded-md bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-gold)] mx-auto mb-4 transition-all group-hover:bg-[var(--color-gold)]/16">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl lg:text-4xl font-bold gradient-gold-text drop-shadow-sm mb-1">
+                  <div className="text-3xl lg:text-4xl font-bold text-[var(--color-gold)] mb-1">
                     {stat.isDecimal ? (
                       <span className="tabular-nums">4.9</span>
                     ) : (
-                      <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                      <StatValue value={stat.value} suffix={stat.suffix} />
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>

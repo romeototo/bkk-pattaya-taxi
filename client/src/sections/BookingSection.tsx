@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LocationSelect } from "@/components/LocationSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WHATSAPP_URL, fadeInUp, stagger } from "@/config/constants";
+import { PRICING, formatPrice } from "@/config/pricing";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Calendar, Clock, Car, CheckCircle2, AlertCircle } from "lucide-react";
@@ -53,18 +54,16 @@ export function BookingSection() {
 
   // Dynamic price calculation
   const calculatedPrice = useMemo(() => {
-    // Default fallback
-    if (!formData.pickupLocation || !formData.dropoffLocation) return "฿1,500";
+    if (!formData.pickupLocation || !formData.dropoffLocation) return formatPrice(PRICING.bkkToPattaya);
     
-    // Simple mock logic for demonstration. In a real app, you'd match exact routes.
-    const isBKK = formData.pickupLocation.includes("BKK") || formData.pickupLocation.includes("Suvarnabhumi");
-    const isPattaya = formData.dropoffLocation.includes("Pattaya");
+    const pickup = formData.pickupLocation;
+    const isBKK = /BKK|Suvarnabhumi/i.test(pickup);
+    const isDMK = /DMK|Don Mueang/i.test(pickup);
     
-    if (isBKK && isPattaya) return "฿1,500";
-    if (formData.pickupLocation.includes("DMK")) return "฿1,800";
-    if (formData.pickupLocation.includes("Hua Hin")) return "฿2,500";
+    if (isBKK) return formatPrice(PRICING.suvarnabhumiToPattaya);
+    if (isDMK) return formatPrice(PRICING.donMueangToPattaya);
     
-    return "฿1,500+"; // Baseline
+    return formatPrice(PRICING.bkkToPattaya);
   }, [formData.pickupLocation, formData.dropoffLocation]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -283,7 +282,7 @@ export function BookingSection() {
                   <p className="text-sm text-muted-foreground mb-1">{t.booking.estimatedTotal}</p>
                   <div className="flex items-end gap-2">
                     <span className="text-3xl font-bold text-primary">{calculatedPrice}</span>
-                    <span className="text-sm text-muted-foreground mb-1 pb-1 text-decoration-line-through opacity-60">฿2,000</span>
+                    <span className="text-sm text-muted-foreground mb-1 pb-1 line-through opacity-60">{formatPrice(PRICING.bkkToPattaya + 500)}</span>
                   </div>
                   <p className="text-xs gradient-gold-text mt-2 font-medium flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3 text-[oklch(0.85_0.12_85)]" /> {t.booking.fixedPrice}

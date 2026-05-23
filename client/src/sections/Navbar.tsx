@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { IMAGES, scrollToSection } from "@/config/constants";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
   const { t, lang, toggleLang } = useLanguage();
@@ -23,7 +24,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-card">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/70 bg-background/92">
       <div className="container flex items-center justify-between h-16 lg:h-20">
         <div className="flex items-center gap-3">
           <img src={IMAGES.logo} alt="BKK Pattaya Private Taxi" className="h-10 w-10 lg:h-12 lg:w-12" />
@@ -74,29 +75,40 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden glass-card border-t border-border">
-          <div className="container py-4 flex flex-col gap-3">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNav(item.id)}
-                className="text-left text-sm text-muted-foreground hover:text-[var(--color-gold)] transition-colors py-2"
+      {/* Mobile menu with animation */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            className="lg:hidden border-t border-border bg-background/96 overflow-hidden"
+          >
+            <div className="container py-4 flex flex-col gap-3">
+              {navItems.map((item, i) => (
+                <motion.button
+                  key={item.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => handleNav(item.id)}
+                  className="text-left text-sm text-muted-foreground hover:text-[var(--color-gold)] transition-colors py-2"
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+              <Button
+                onClick={() => handleNav("booking")}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2"
+                size="sm"
               >
-                {item.label}
-              </button>
-            ))}
-            <Button
-              onClick={() => handleNav("booking")}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2"
-              size="sm"
-            >
-              {t.nav.bookNow}
-            </Button>
-          </div>
-        </div>
-      )}
+                {t.nav.bookNow}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

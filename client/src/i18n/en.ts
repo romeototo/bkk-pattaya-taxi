@@ -27,6 +27,7 @@ export const en: Translations = {
   whyUs: {
     title: "Why Choose Us",
     subtitle: "We provide premium private transfer service trusted by thousands of international travelers",
+    badge: "Why Choose Us",
     items: [
       { title: "Fixed Price Guarantee", desc: "No hidden charges, no surge pricing. The price you see is the price you pay, including tolls and fuel.", icon: "creditcard" },
       { title: "Professional Drivers", desc: "All our drivers are licensed, experienced, and English-speaking. Your safety and comfort are our priority.", icon: "award" },
@@ -90,6 +91,12 @@ export const en: Translations = {
   gallery: {
     title: "Our Fleet & Destinations",
     subtitle: "Premium vehicles and beautiful destinations await you",
+    routeTitle: "Bangkok → Pattaya Route",
+    routeDesc: "Approximately 1.5 – 2 hours via Motorway 7",
+  },
+  cta: {
+    title: "Ready for a Seamless Transfer?",
+    subtitle: "Book your private taxi from Bangkok to Pattaya today. Fixed prices, no hidden fees, and professional English-speaking drivers.",
   },
   faq: {
     title: "Frequently Asked Questions",

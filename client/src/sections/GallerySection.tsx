@@ -57,8 +57,8 @@ export function GallerySection() {
               <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-semibold text-foreground">Bangkok → Pattaya Route</h3>
-              <p className="text-sm text-muted-foreground">Approximately 1.5 – 2 hours via Motorway 7</p>
+              <h3 className="font-serif text-lg font-semibold text-foreground">{t.gallery.routeTitle}</h3>
+              <p className="text-sm text-muted-foreground">{t.gallery.routeDesc}</p>
             </div>
           </div>
           <div className="rounded-2xl overflow-hidden border border-border/50 shadow-lg">

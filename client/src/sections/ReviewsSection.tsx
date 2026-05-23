@@ -1,15 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { fadeInUp, stagger } from "@/config/constants";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export function ReviewsSection() {
   const { t } = useLanguage();
   const reviews = t.reviews.items;
   const [active, setActive] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const next = useCallback(() => {
     setActive((prev) => (prev + 1) % reviews.length);
@@ -26,13 +27,20 @@ export function ReviewsSection() {
     return () => clearInterval(timer);
   }, [isAutoPlaying, next]);
 
-  // Pause auto-play on interaction
+  // Pause auto-play on interaction, resume after 10s
   const handleManualNav = (fn: () => void) => {
     setIsAutoPlaying(false);
     fn();
-    // Resume after 10s of no interaction
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => setIsAutoPlaying(true), 10000);
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, []);
 
   return (
     <section id="reviews" className="py-20 lg:py-28 relative overflow-hidden">
@@ -43,7 +51,7 @@ export function ReviewsSection() {
           <motion.p variants={fadeInUp} className="text-muted-foreground max-w-2xl mx-auto">{t.reviews.subtitle}</motion.p>
         </motion.div>
 
-        {/* Featured Review — Big Card */}
+        {/* Featured Review — Big Card with slide transition */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -56,50 +64,60 @@ export function ReviewsSection() {
               <Quote className="w-20 h-20" />
             </div>
             <CardContent className="p-8 lg:p-12">
-              {/* Stars */}
-              <div className="flex items-center gap-1 mb-6">
-                {Array.from({ length: reviews[active].rating }).map((_, j) => (
-                  <Star key={j} className="w-5 h-5 fill-[var(--color-gold)] text-[var(--color-gold)] drop-shadow-[0_0_8px_rgba(213,181,99,0.5)]" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className="text-lg lg:text-xl text-foreground/90 leading-relaxed mb-8 italic font-light min-h-[4.5rem] transition-all">
-                "{reviews[active].text}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent flex items-center justify-center text-[var(--color-gold)] font-semibold text-base border border-[var(--color-gold)]/30 shadow-[0_0_15px_rgba(213,181,99,0.1)]">
-                    {reviews[active].name.split(" ").map(n => n[0]).join("")}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                >
+                  {/* Stars */}
+                  <div className="flex items-center gap-1 mb-6">
+                    {Array.from({ length: reviews[active].rating }).map((_, j) => (
+                      <Star key={j} className="w-5 h-5 fill-[var(--color-gold)] text-[var(--color-gold)] drop-shadow-[0_0_8px_rgba(213,181,99,0.5)]" />
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground">{reviews[active].name}</p>
-                    <p className="text-sm text-muted-foreground">{reviews[active].country}</p>
-                  </div>
-                </div>
 
-                {/* Navigation arrows */}
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleManualNav(prev)}
-                    className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
-                    aria-label="Previous review"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleManualNav(next)}
-                    className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
-                    aria-label="Next review"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
+                  {/* Quote */}
+                  <p className="text-lg lg:text-xl text-foreground/90 leading-relaxed mb-8 italic font-light min-h-[4.5rem]">
+                    "{reviews[active].text}"
+                  </p>
+
+                  {/* Author */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent flex items-center justify-center text-[var(--color-gold)] font-semibold text-base border border-[var(--color-gold)]/30 shadow-[0_0_15px_rgba(213,181,99,0.1)]">
+                        {reviews[active].name.split(" ").map(n => n[0]).join("")}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">{reviews[active].name}</p>
+                        <p className="text-sm text-muted-foreground">{reviews[active].country}</p>
+                      </div>
+                    </div>
+
+                    {/* Navigation arrows */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleManualNav(prev)}
+                        className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
+                        aria-label="Previous review"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleManualNav(next)}
+                        className="w-10 h-10 rounded-full border border-border hover:border-[var(--color-gold)]/50 hover:bg-[var(--color-gold)]/10 flex items-center justify-center text-muted-foreground hover:text-[var(--color-gold)] transition-all hover:shadow-[0_0_10px_rgba(213,181,99,0.15)]"
+                        aria-label="Next review"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </CardContent>
           </Card>
         </motion.div>

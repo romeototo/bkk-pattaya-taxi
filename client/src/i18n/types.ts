@@ -8,9 +8,10 @@ export type Translations = {
     routes: Array<{ name: string; price: string; desc: string; icon: string }>;
   };
   whyUs: {
-    title: string; subtitle: string;
+    title: string; subtitle: string; badge: string;
     items: Array<{ title: string; desc: string; icon: string }>;
   };
+  cta: { title: string; subtitle: string };
   reviews: {
     title: string; subtitle: string;
     items: Array<{ name: string; country: string; text: string; rating: number }>;
@@ -29,7 +30,7 @@ export type Translations = {
       email: string; phone: string; notes: string; flightNumber: string;
     };
   };
-  gallery: { title: string; subtitle: string };
+  gallery: { title: string; subtitle: string; routeTitle: string; routeDesc: string };
   faq: { title: string; subtitle: string; items: Array<{ q: string; a: string }> };
   contact: { title: string; subtitle: string; whatsapp: string; line: string; phone: string; lineId: string };
   footer: {

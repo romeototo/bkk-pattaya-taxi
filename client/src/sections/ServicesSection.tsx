@@ -15,16 +15,13 @@ export function ServicesSection() {
           <motion.p variants={fadeInUp} className="text-muted-foreground max-w-2xl mx-auto">{t.services.subtitle}</motion.p>
         </motion.div>
 
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={stagger} className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={stagger} className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {t.services.routes.map((route, i) => (
             <motion.div key={i} variants={fadeInUp} className="group">
-              <div className="relative h-full rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 transition-all duration-500 hover:border-[var(--color-gold)]/40 hover:shadow-lg hover:shadow-[var(--color-gold)]/5 hover:-translate-y-1 overflow-hidden">
-                {/* Gradient glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-gold)]/0 via-[var(--color-gold)]/0 to-[var(--color-gold)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
+              <div className="relative h-full rounded-lg border border-border/70 bg-card/75 p-6 transition-all duration-300 hover:border-[var(--color-gold)]/45 hover:-translate-y-0.5 overflow-hidden">
                 <div className="relative">
                   {/* Icon */}
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-gold)]/10 to-transparent flex items-center justify-center text-[var(--color-gold)] mb-5 group-hover:from-[var(--color-gold)]/20 group-hover:to-[var(--color-gold)]/5 transition-all duration-300 group-hover:scale-110 border border-[var(--color-gold)]/20">
+                  <div className="w-12 h-12 rounded-md bg-[var(--color-gold)]/10 flex items-center justify-center text-[var(--color-gold)] mb-5 border border-[var(--color-gold)]/20">
                     {iconMap[route.icon]}
                   </div>
 
@@ -32,7 +29,7 @@ export function ServicesSection() {
                   <h3 className="font-serif text-lg font-semibold mb-3 text-foreground">{route.name}</h3>
 
                   {/* Price — highlighted */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 mb-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 mb-4">
                     <span className="text-[var(--color-gold)] font-bold text-xl drop-shadow-sm">{route.price}</span>
                   </div>
 
