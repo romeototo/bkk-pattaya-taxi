@@ -41,11 +41,11 @@ export const stagger = {
 
 // Gallery images
 export const galleryImages = [
-  { src: IMAGES.hero, alt: "Premium sedan on Thai highway", caption: "Premium Sedan" },
-  { src: IMAGES.airport, alt: "Airport pickup service", caption: "Airport Pickup" },
-  { src: IMAGES.pattaya, alt: "Pattaya beach destination", caption: "Pattaya Scenic" },
-  { src: IMAGES.interior, alt: "Luxury car interior", caption: "Spacious Interior" },
-  { src: IMAGES.bangkok, alt: "Bangkok city skyline", caption: "Bangkok City" },
+  { src: IMAGES.hero, alt: "White sedan used for private Bangkok Pattaya transfers", caption: "Actual transfer car" },
+  { src: IMAGES.airport, alt: "Side view of the sedan for airport pickup service", caption: "Airport-ready sedan" },
+  { src: IMAGES.interior, alt: "Rear passenger seats inside the transfer car", caption: "Rear seat space" },
+  { src: IMAGES.bangkok, alt: "Front view of the sedan used for private transfers", caption: "Clean exterior" },
+  { src: IMAGES.pattaya, alt: "Sedan photographed near a coastal Pattaya route", caption: "Pattaya route" },
 ];
 
 // Utility

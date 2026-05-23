@@ -2,7 +2,7 @@ import type { Translations } from "./types";
 import { PRICING, formatPrice } from "../config/pricing";
 
 export const en: Translations = {
-  nav: { services: "Services", whyUs: "Why Us", reviews: "Reviews", gallery: "Gallery", faq: "FAQ", contact: "Contact", bookNow: "Book Now" },
+  nav: { services: "Services", whyUs: "Why Us", gallery: "Fleet", faq: "FAQ", contact: "Contact", bookNow: "Book Now" },
   hero: {
     badge: "Premium Private Transfer Service",
     h1: "Bangkok to Pattaya Taxi",
@@ -11,8 +11,8 @@ export const en: Translations = {
     bookNow: "Book Now",
     whatsapp: "Chat on WhatsApp",
     features: ["Private Car Only", "Fixed Price", "Airport Pickup", "English Speaking Driver"],
-    trustRating: "4.9/5 Premium Rating",
-    trustQuote: "\"The best transfer experience in Thailand. Highly recommended!\"",
+    trustRating: "Private transfer, confirmed before pickup",
+    trustQuote: "Fixed price, private car, and direct confirmation by WhatsApp or LINE.",
   },
   services: {
     title: "Popular Routes",
@@ -26,7 +26,7 @@ export const en: Translations = {
   },
   whyUs: {
     title: "Why Choose Us",
-    subtitle: "We provide premium private transfer service trusted by thousands of international travelers",
+    subtitle: "A private transfer service built around clear pricing, direct pickup instructions, and practical airport support.",
     badge: "Why Choose Us",
     items: [
       { title: "Fixed Price Guarantee", desc: "No hidden charges, no surge pricing. The price you see is the price you pay, including tolls and fuel.", icon: "creditcard" },
@@ -35,18 +35,6 @@ export const en: Translations = {
       { title: "Private Transfer Only", desc: "No ride sharing. Your car is exclusively for you and your group. Enjoy privacy and comfort.", icon: "shield" },
       { title: "Airport Meet & Greet", desc: "Our driver meets you at the arrival hall with a name sign. Free waiting time for flight delays.", icon: "plane" },
       { title: "Easy Booking", desc: "Book instantly via WhatsApp or LINE. Quick confirmation and flexible cancellation policy.", icon: "messagecircle" },
-    ],
-  },
-  reviews: {
-    title: "What Our Customers Say",
-    subtitle: "Recent customer notes from private transfer bookings",
-    items: [
-      { name: "James Wilson", country: "United Kingdom", text: "Excellent service! Driver was punctual and very professional. The car was clean and comfortable. Highly recommend for anyone traveling from Bangkok to Pattaya.", rating: 5 },
-      { name: "Sarah Johnson", country: "United States", text: "Best transfer service in Thailand! Fixed price, no hassle. The driver was waiting at the airport with my name sign. Very smooth experience.", rating: 5 },
-      { name: "Hans Mueller", country: "Germany", text: "We used this service for our family trip. The van was spacious and the driver was very helpful with our luggage. Great value for money.", rating: 5 },
-      { name: "Yuki Tanaka", country: "Japan", text: "Very reliable and comfortable. The driver spoke good English and was very friendly. Will definitely use again on my next trip to Thailand.", rating: 5 },
-      { name: "Pierre Dubois", country: "France", text: "Booked via WhatsApp and got instant confirmation. The car was waiting for us at the hotel lobby. Smooth ride to Pattaya. Merci!", rating: 5 },
-      { name: "Emma Chen", country: "Australia", text: "Used this service twice during our Thailand holiday. Both times were perfect. Clean car, safe driving, and very reasonable price.", rating: 5 },
     ],
   },
   booking: {

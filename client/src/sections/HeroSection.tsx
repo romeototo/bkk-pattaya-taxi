@@ -9,16 +9,16 @@ export function HeroSection() {
 
   const trustProofs = [
     {
-      value: "4.9/5",
-      label: lang === "th" ? "คะแนนจากลูกค้า" : "customer rating",
+      value: "BKK",
+      label: lang === "th" ? "รับสุวรรณภูมิ" : "Suvarnabhumi pickup",
     },
     {
       value: "24/7",
       label: lang === "th" ? "รับสนามบินได้ทุกเวลา" : "airport pickup",
     },
     {
-      value: "12h",
-      label: lang === "th" ? "เปลี่ยนหรือยกเลิกฟรี" : "free changes",
+      value: "DMK",
+      label: lang === "th" ? "รับดอนเมือง" : "Don Mueang pickup",
     },
   ];
 

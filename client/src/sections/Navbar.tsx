@@ -17,7 +17,6 @@ export function Navbar() {
   const navItems = [
     { label: t.nav.services, id: "services" },
     { label: t.nav.whyUs, id: "why-us" },
-    { label: t.nav.reviews, id: "reviews" },
     { label: t.nav.gallery, id: "gallery" },
     { label: t.nav.faq, id: "faq" },
     { label: t.nav.contact, id: "contact" },

@@ -29,7 +29,7 @@ export function GallerySection() {
                 loading="lazy"
               />
               {/* Always-visible bottom gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
 
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -37,8 +37,8 @@ export function GallerySection() {
               {/* Caption — always visible at bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Camera className="w-4 h-4 text-white/80" />
-                  <span className="text-white font-medium text-sm drop-shadow-lg">{img.caption}</span>
+                  <Camera className="w-4 h-4 text-[oklch(0.95_0.005_260/.85)]" />
+                  <span className="text-[oklch(0.95_0.005_260)] font-medium text-sm drop-shadow-lg">{img.caption}</span>
                 </div>
               </div>
             </motion.div>
@@ -53,7 +53,7 @@ export function GallerySection() {
           variants={fadeInUp}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center text-primary">
               <MapPin className="w-5 h-5" />
             </div>
             <div>
@@ -61,7 +61,7 @@ export function GallerySection() {
               <p className="text-sm text-muted-foreground">{t.gallery.routeDesc}</p>
             </div>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-border/50 shadow-lg">
+          <div className="rounded-lg overflow-hidden border border-border/50 shadow-lg">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d496058.5!2d100.5!3d13.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x311d6032280d61f3%3A0x10100b25de24820!2sBangkok!3m2!1d13.7563309!2d100.5017651!4m5!1s0x3102b7e2d5e0f01d%3A0x10100b25de24880!2sPattaya!3m2!1d12.9235557!2d100.8824551!5e0!3m2!1sen!2sth!4v1709000000000!5m2!1sen!2sth"
               width="100%"

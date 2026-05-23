@@ -1,7 +1,8 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { fadeInUp, stagger } from "@/config/constants";
 import { motion } from "framer-motion";
-import { Car, Star, Clock, Users } from "lucide-react";
+import { Car, CreditCard, Clock, Plane } from "lucide-react";
+import { PRICING, formatPrice } from "@/config/pricing";
 
 function StatValue({ value, suffix = "" }: { value: number; suffix?: string }) {
   return <span className="tabular-nums">{value.toLocaleString()}{suffix}</span>;
@@ -9,16 +10,16 @@ function StatValue({ value, suffix = "" }: { value: number; suffix?: string }) {
 
 const stats = {
   en: [
-    { icon: <Car className="w-5 h-5" />, value: 5000, suffix: "+", label: "Trips Completed" },
-    { icon: <Star className="w-5 h-5" />, value: 4.9, suffix: "", label: "Average Rating", isDecimal: true },
-    { icon: <Clock className="w-5 h-5" />, value: 24, suffix: "/7", label: "Service Available" },
-    { icon: <Users className="w-5 h-5" />, value: 3200, suffix: "+", label: "Happy Customers" },
+    { icon: <CreditCard className="w-5 h-5" />, value: formatPrice(PRICING.bkkToPattaya), label: "Bangkok to Pattaya" },
+    { icon: <Plane className="w-5 h-5" />, value: "BKK + DMK", label: "Airport pickup" },
+    { icon: <Clock className="w-5 h-5" />, value: "24/7", label: "Pickup times" },
+    { icon: <Car className="w-5 h-5" />, value: "Private", label: "No shared ride" },
   ],
   th: [
-    { icon: <Car className="w-5 h-5" />, value: 5000, suffix: "+", label: "เที่ยวที่ให้บริการ" },
-    { icon: <Star className="w-5 h-5" />, value: 4.9, suffix: "", label: "คะแนนเฉลี่ย", isDecimal: true },
-    { icon: <Clock className="w-5 h-5" />, value: 24, suffix: "/7", label: "ให้บริการตลอด" },
-    { icon: <Users className="w-5 h-5" />, value: 3200, suffix: "+", label: "ลูกค้าที่พึงพอใจ" },
+    { icon: <CreditCard className="w-5 h-5" />, value: formatPrice(PRICING.bkkToPattaya), label: "กรุงเทพ ไป พัทยา" },
+    { icon: <Plane className="w-5 h-5" />, value: "BKK + DMK", label: "รับที่สนามบิน" },
+    { icon: <Clock className="w-5 h-5" />, value: "24/7", label: "เวลารับรถ" },
+    { icon: <Car className="w-5 h-5" />, value: "Private", label: "รถส่วนตัว" },
   ],
 };
 
@@ -47,12 +48,8 @@ export function StatsSection() {
                   <div className="w-11 h-11 rounded-md bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-gold)] mx-auto mb-4 transition-all group-hover:bg-[var(--color-gold)]/16">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl lg:text-4xl font-bold text-[var(--color-gold)] mb-1">
-                    {stat.isDecimal ? (
-                      <span className="tabular-nums">4.9</span>
-                    ) : (
-                      <StatValue value={stat.value} suffix={stat.suffix} />
-                    )}
+                  <div className="text-2xl lg:text-3xl font-bold text-[var(--color-gold)] mb-1">
+                    {typeof stat.value === "number" ? <StatValue value={stat.value} /> : <span>{stat.value}</span>}
                   </div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </div>

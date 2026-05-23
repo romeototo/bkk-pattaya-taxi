@@ -1,7 +1,7 @@
 export type Lang = "en" | "th";
 
 export type Translations = {
-  nav: { services: string; whyUs: string; reviews: string; gallery: string; faq: string; contact: string; bookNow: string };
+  nav: { services: string; whyUs: string; gallery: string; faq: string; contact: string; bookNow: string };
   hero: { badge: string; h1: string; h1span: string; subtitle: string; bookNow: string; whatsapp: string; features: string[]; trustRating: string; trustQuote: string };
   services: {
     title: string; subtitle: string;
@@ -12,10 +12,6 @@ export type Translations = {
     items: Array<{ title: string; desc: string; icon: string }>;
   };
   cta: { title: string; subtitle: string };
-  reviews: {
-    title: string; subtitle: string;
-    items: Array<{ name: string; country: string; text: string; rating: number }>;
-  };
   booking: {
     title: string; subtitle: string; pickup: string; dropoff: string;
     date: string; time: string; fullName: string; email: string;
